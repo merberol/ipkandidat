@@ -17,6 +17,9 @@ struct EventHandler
 		if (elevation >= 1000 && gearDeployment > 0.0) {
 			worker.HighAlt();
 		}
+		if (elevation < 500 && gearDeployment < 1.0) {
+			worker.LowAlt();
+		}
 	}
 
 	bool DoStallingEvent() {

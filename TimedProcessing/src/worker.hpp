@@ -31,6 +31,10 @@ public:
 		std::cout << "gear down warning!" << std::endl;
 	}
 
+	void LowAlt() {
+		std::cout << "gear up warning!" << std::endl;
+	}
+
 	void Stalling() {
 		std::cout << "stall warning!" << std::endl;
 	}
