@@ -34,11 +34,12 @@
 #include <unordered_map>
 #include <math.h>
 
-#include "src/worker.hpp"
+#include "src/EventHandler.hpp"
 
-#define MAX_REFS 7
-static char DataRefString[MAX_REFS][255] = { "sim/flightmodel/position/elevation", "sim/flightmodel/position/local_x", "sim/flightmodel/position/local_y", "sim/flightmodel/position/local_z", "sim/flightmodel/failures/stallwarning", "sim/aircraft/gear/acf_gear_retract", "sim/aircraft/parts/acf_gear_deploy"};
-static XPLMDataRef storedDataRefs[MAX_REFS];
+
+
+
+static std::vector<std::string> DataRefString{ "sim/flightmodel/position/elevation", "sim/flightmodel/position/local_x", "sim/flightmodel/position/local_y", "sim/flightmodel/position/local_z", "sim/flightmodel/failures/stallwarning", "sim/aircraft/gear/acf_gear_retract", "sim/aircraft/parts/acf_gear_deploy"};
 static std::unordered_map<std::string, XPLMDataRef> dataRefMap{};
 static std::vector<float> prev_pos{0,0,0};
 static std::vector<float> curr_pos{0,0,0};
@@ -51,8 +52,8 @@ static double CalculateSpeed(float);
 static int DetectRedout(void);
 static int DetectBlackout(void);
 
-Worker worker{};
 
+EventHandler eventHandler{};
 /* File to write data to. */
 static FILE *	gOutputFile;
 
@@ -82,12 +83,11 @@ PLUGIN_API int XPluginStart(
 	strcpy_s(outSig, 18, "liu.haptic_plugin");
 	strcpy_s(outDesc, 55, "A plugin for testing a haptic vest with the flightsim.");
 	
-	worker.sayHello();
+
 	
 	
-	for (int dataRef = 0; dataRef < MAX_REFS; dataRef++) {
-		dataRefMap.emplace(DataRefString[dataRef], XPLMFindDataRef(DataRefString[dataRef]));
-		storedDataRefs[dataRef] = XPLMFindDataRef(DataRefString[dataRef]);
+	for (int i = 0; i < DataRefString.size(); i++) {
+		dataRefMap.emplace(DataRefString[i], XPLMFindDataRef(DataRefString[i].c_str()));
 	}
 
 	XPLMRegisterFlightLoopCallback(
@@ -134,17 +134,14 @@ float	HapticFlightLoopCallback(
 	float	lat = XPLMGetDataf(gPlaneLat);
 	float	lon = XPLMGetDataf(gPlaneLon);
 	float	el = XPLMGetDataf(gPlaneEl);
-	try {
-		double speed = CalculateSpeed(inElapsedSinceLastCall);
-		int elevation = GetElevation();
-		high_alt = elevation >= 1000;
-		if (high_alt) { worker.highAlt(); }
-
-	}
-	catch (std::exception &e) {
-		
-	}
 	
+	if (eventHandler.DoGearEvent() && XPLMGetDatai(dataRefMap.at("sim/aircraft/gear/acf_gear_retract"))) {
+		eventHandler.GearEvent(
+			CalculateSpeed(inElapsedSinceLastCall),
+			GetElevation(),
+			GetGearDeployed()
+		);
+	}
 	
 	/* Return 1.0 to indicate that we want to be called again in 1 second. */
 	return 1.0;
@@ -182,7 +179,16 @@ std::vector<float> GetPosition(void)
 	return pos_vector;
 }
 
+/**
+* @returns landing gear deployment, 0.0->1.0 
+*/
+float GetGearDeployed() {
+	
+	float deployed{ XPLMGetDataf(dataRefMap.at("sim/aircraft/parts/acf_gear_deploy")) };
 
+
+	return deployed;
+}
 
 /*
 * runs once every second
@@ -228,6 +234,9 @@ int DetectBlackout(void)
 {
 
 }                               
+
+
+
 
 #if APL && __MACH__
 #include <Carbon/Carbon.h>

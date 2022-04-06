@@ -4,23 +4,30 @@
 
  //#include <glog/logging.h>
 
+#define DEBUG
+
 class Worker {
 public:
 
 	Worker() {
-		
+#ifdef DEBUG
+		AllocConsole();
+		freopen("CONOUT$", "w", stdout);
+		freopen("CONOUT$", "w", stderr);
+#endif // DEBUG
+
 		std::cout << "creating worker!" << std::endl;
 	}
 
 	~Worker() {
-		//LOG(INFO) << "destroying worker";
+		std::cout << "destroying worker" << std::endl;
 	}
 
-	void sayHello() {
+	void SayHello() {
 		std::cout << "worker says Hello!" << std::endl;
 	}
 
-	void highAlt() {
+	void HighAlt() {
 		std::cout << "gear down warning!" << std::endl;
 	}
 
