@@ -28,25 +28,23 @@
 #include "XPLMProcessing.h"
 #include "XPLMDataAccess.h"
 #include "XPLMUtilities.h"
-// #include <glog/logging.h>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <math.h>
-
 #include "src/EventHandler.hpp"
-
-
 
 
 static std::vector<std::string> DataRefString{ "sim/flightmodel/position/elevation", "sim/flightmodel/position/local_x", "sim/flightmodel/position/local_y", "sim/flightmodel/position/local_z", "sim/flightmodel/failures/stallwarning", "sim/aircraft/gear/acf_gear_retract", "sim/aircraft/parts/acf_gear_deploy"};
 static std::unordered_map<std::string, XPLMDataRef> dataRefMap{};
-static std::vector<float> prev_pos{0,0,0};
-static std::vector<float> curr_pos{0,0,0};
-static bool high_alt = false;
+static std::vector<float> prevPos{0,0,0};
+static std::vector<float> currPos{0,0,0};
+static bool highAlt = false;
 
 static int GetElevation(void);
 static std::vector<float> GetPosition(void);
+static float GetGearDeployed(void);
+static int GetStallWarning(void);
 static double CalculateDistance(std::vector<float> pos1, std::vector<float> pos2);
 static double CalculateSpeed(float);
 static int DetectRedout(void);
@@ -83,9 +81,6 @@ PLUGIN_API int XPluginStart(
 	strcpy_s(outSig, 18, "liu.haptic_plugin");
 	strcpy_s(outDesc, 55, "A plugin for testing a haptic vest with the flightsim.");
 	
-
-	
-	
 	for (int i = 0; i < DataRefString.size(); i++) {
 		dataRefMap.emplace(DataRefString[i], XPLMFindDataRef(DataRefString[i].c_str()));
 	}
@@ -100,7 +95,6 @@ PLUGIN_API int XPluginStart(
 
 PLUGIN_API void	XPluginStop(void)
 {
-
 	// Call destructor for allocated resources
 	XPLMUnregisterFlightLoopCallback(HapticFlightLoopCallback, NULL);
 }
@@ -142,6 +136,17 @@ float	HapticFlightLoopCallback(
 			GetGearDeployed()
 		);
 	}
+
+	if (eventHandler.DoStallingEvent() && XPLMGetDatai(dataRefMap.at("sim/flightmodel/failures/stallwarning"))) {
+		eventHandler.StallingEvent(
+			GetStallWarning()
+		);
+	}
+
+	if (eventHandler.DoXOutEvents()) {
+		eventHandler.RedoutEvent(DetectRedout());
+		eventHandler.BlackoutEvent(DetectBlackout());
+	}
 	
 	/* Return 1.0 to indicate that we want to be called again in 1 second. */
 	return 1.0;
@@ -151,7 +156,7 @@ int GetElevation(void)
 {
 	int elevation{ -1 };
 	try {
-		int elevation = XPLMGetDatai(
+		elevation = XPLMGetDatai(
 			dataRefMap.at("sim/flightmodel/position/elevation")
 		);
 	}
@@ -165,12 +170,10 @@ std::vector<float> GetPosition(void)
 {	
 	std::vector<float> pos_vector{ 0,0,0 };
 	try {
-
 		pos_vector = {
 			XPLMGetDataf(dataRefMap.at("sim/flightmodel/position/local_x")),
 			XPLMGetDataf(dataRefMap.at("sim/flightmodel/position/local_y")),
 			XPLMGetDataf(dataRefMap.at("sim/flightmodel/position/local_z"))
-
 		};
 	}
 	catch (std::exception& e) {
@@ -182,12 +185,25 @@ std::vector<float> GetPosition(void)
 /**
 * @returns landing gear deployment, 0.0->1.0 
 */
-float GetGearDeployed() {
-	
+float GetGearDeployed(void) {
 	float deployed{ XPLMGetDataf(dataRefMap.at("sim/aircraft/parts/acf_gear_deploy")) };
-
-
 	return deployed;
+}
+
+/**
+* @returns if gear is retractable, 0->1
+*/
+int GetGearRetractable(void) {
+	int retractable{ XPLMGetDatai(dataRefMap.at("sim/aircraft/gear/acf_gear_retract")) };
+	return retractable;
+}
+
+/**
+* @returns if plane is stalling, 0->1
+*/
+int GetStallWarning(void) {
+	int stallWarning{ XPLMGetDatai(dataRefMap.at("sim/flightmodel/failures/stallwarning")) };
+	return stallWarning;
 }
 
 /*
@@ -197,9 +213,9 @@ double CalculateSpeed(float delta)
 {
 	double speed;
 	try {
-		prev_pos = curr_pos;
-		curr_pos = GetPosition();
-		speed = CalculateDistance(curr_pos, prev_pos) / delta;
+		prevPos = currPos;
+		currPos = GetPosition();
+		speed = CalculateDistance(currPos, prevPos) / delta;
 	}
 	catch (std::exception& e) {
 		
@@ -211,7 +227,6 @@ double CalculateDistance(std::vector<float> pos1, std::vector<float> pos2)
 {
 	double distance{};
 	try {
-
 		distance = sqrt(
 			pow(pos2[0] - pos1[0], 2) +
 			pow(pos2[1] - pos1[1], 2) +
@@ -227,12 +242,12 @@ double CalculateDistance(std::vector<float> pos1, std::vector<float> pos2)
 
 int DetectRedout(void)
 {
-	
+	return 0;
 }
 
 int DetectBlackout(void)
 {
-
+	return 0;
 }                               
 
 
