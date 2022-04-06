@@ -1,3 +1,3 @@
-﻿  TimedProcessing.cpp
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(500,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
      Creating library .\Debug\64\TimedProcessing.lib and object .\Debug\64\TimedProcessing.exp
-  TimedProcessing.vcxproj -> C:\Users\chasi127\Downloads\TimedProcessing\Debug\plugins\TimedProcessing\64\win.xpl
+  TimedProcessing.vcxproj -> C:\X-Plane 11\Resources\plugins\LiuHaptics\win.xpl

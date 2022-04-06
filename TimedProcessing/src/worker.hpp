@@ -2,27 +2,26 @@
 
 #include <iostream> 
 
-#include <glog/logging.h>
+ //#include <glog/logging.h>
 
 class Worker {
 public:
 
 	Worker() {
 		
-
-		LOG(INFO) << "instansiating Worker";
+		std::cout << "creating worker!" << std::endl;
 	}
 
 	~Worker() {
-		LOG(INFO) << "destroying worker";
+		//LOG(INFO) << "destroying worker";
 	}
 
 	void sayHello() {
-		LOG(INFO) << "worker says Hello!";
+		std::cout << "worker says Hello!" << std::endl;
 	}
 
 	void highAlt() {
-		LOG(INFO) << "seeing gear down warning";
+		std::cout << "gear down warning!" << std::endl;
 	}
 
 };

@@ -22,14 +22,13 @@
 #include <Carbon/Carbon.h>
 #endif
 #endif
-#define GLOG_NO_ABBREVIATED_SEVERITIES
+ #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <stdio.h>
 #include <string.h>
 #include "XPLMProcessing.h"
 #include "XPLMDataAccess.h"
 #include "XPLMUtilities.h"
-#include <gflags/gflags.h>
-#include <glog/logging.h>
+// #include <glog/logging.h>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -37,12 +36,12 @@
 
 #include "src/worker.hpp"
 
-#define MAX_REFS 4
-static char DataRefString[MAX_REFS][255] = { "sim/flightmodel/position/elevation", "sim/flightmodel/position/local_x", "sim/flightmodel/position/local_y", "sim/flightmodel/position/local_z" };
+#define MAX_REFS 7
+static char DataRefString[MAX_REFS][255] = { "sim/flightmodel/position/elevation", "sim/flightmodel/position/local_x", "sim/flightmodel/position/local_y", "sim/flightmodel/position/local_z", "sim/flightmodel/failures/stallwarning", "sim/aircraft/gear/acf_gear_retract", "sim/aircraft/parts/acf_gear_deploy"};
 static XPLMDataRef storedDataRefs[MAX_REFS];
 static std::unordered_map<std::string, XPLMDataRef> dataRefMap{};
-static std::vector<float> prev_pos{};
-static std::vector<float> curr_pos{};
+static std::vector<float> prev_pos{0,0,0};
+static std::vector<float> curr_pos{0,0,0};
 static bool high_alt = false;
 
 static int GetElevation(void);
@@ -79,21 +78,18 @@ PLUGIN_API int XPluginStart(
 						char *		outSig,
 						char *		outDesc)
 {
-	google::InitGoogleLogging("Xplane Haptic plugin");
-	LOG(INFO) << "Starting Plugin";
 	strcpy_s(outName, 18, "LIU Haptic Plugin");
 	strcpy_s(outSig, 18, "liu.haptic_plugin");
 	strcpy_s(outDesc, 55, "A plugin for testing a haptic vest with the flightsim.");
 	
 	worker.sayHello();
 	
-	LOG(INFO) << " building data ref map ";
+	
 	for (int dataRef = 0; dataRef < MAX_REFS; dataRef++) {
 		dataRefMap.emplace(DataRefString[dataRef], XPLMFindDataRef(DataRefString[dataRef]));
 		storedDataRefs[dataRef] = XPLMFindDataRef(DataRefString[dataRef]);
 	}
-	LOG(INFO) << " done building data ref map ";
-	// Flight loop for calculating time?
+
 	XPLMRegisterFlightLoopCallback(
 		HapticFlightLoopCallback,	/* Callback */
 		1.0,						/* Interval */
@@ -104,7 +100,7 @@ PLUGIN_API int XPluginStart(
 
 PLUGIN_API void	XPluginStop(void)
 {
-	LOG(INFO) << "stopping plugin";
+
 	// Call destructor for allocated resources
 	XPLMUnregisterFlightLoopCallback(HapticFlightLoopCallback, NULL);
 }
@@ -146,7 +142,7 @@ float	HapticFlightLoopCallback(
 
 	}
 	catch (std::exception &e) {
-		LOG(FATAL) << e.what();
+		
 	}
 	
 	
@@ -163,7 +159,7 @@ int GetElevation(void)
 		);
 	}
 	catch (std::exception& e) {
-		LOG(FATAL) << e.what();
+		
 	}
 	return elevation;
 }
@@ -181,7 +177,7 @@ std::vector<float> GetPosition(void)
 		};
 	}
 	catch (std::exception& e) {
-		LOG(FATAL) << e.what();
+		
 	}
 	return pos_vector;
 }
@@ -200,7 +196,7 @@ double CalculateSpeed(float delta)
 		speed = CalculateDistance(curr_pos, prev_pos) / delta;
 	}
 	catch (std::exception& e) {
-		LOG(FATAL) << e.what();
+		
 	}
 	return speed;
 }    
@@ -211,14 +207,14 @@ double CalculateDistance(std::vector<float> pos1, std::vector<float> pos2)
 	try {
 
 		distance = sqrt(
+			pow(pos2[0] - pos1[0], 2) +
 			pow(pos2[1] - pos1[1], 2) +
-			pow(pos2[2] - pos1[2], 2) +
-			pow(pos2[3] - pos1[3], 2)
+			pow(pos2[2] - pos1[2], 2)
 		);
 	}
 	catch (std::exception& e)
 	{
-		LOG(FATAL) << e.what();
+		
 	}
 	return distance;
 }
