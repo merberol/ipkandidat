@@ -10,11 +10,11 @@ class Worker {
 public:
 
 	Worker() {
-#ifdef DEBUG
+		#ifdef DEBUG
 		AllocConsole();
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);
-#endif // DEBUG
+		#endif // DEBUG
 
 		std::cout << "creating worker!" << std::endl;
 	}
@@ -29,6 +29,22 @@ public:
 
 	void HighAlt() {
 		std::cout << "gear down warning!" << std::endl;
+	}
+
+	void LowAlt() {
+		std::cout << "gear up warning!" << std::endl;
+	}
+
+	void Stalling() {
+		std::cout << "stall warning!" << std::endl;
+	}
+
+	void Redout() {
+		std::cout << "redout warning!" << std::endl;
+	}
+
+	void Blackout() {
+		std::cout << "blackout warning!" << std::endl;
 	}
 
 };
