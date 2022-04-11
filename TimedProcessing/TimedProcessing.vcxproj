@@ -113,7 +113,7 @@
       <Optimization>Disabled</Optimization>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <AdditionalIncludeDirectories>SDK\CHeaders\XPLM;SDK\CHeaders\Widgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>SDK\CHeaders\XPLM;SDK\CHeaders\Widgets;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINVER=0x0601;_WIN32_WINNT=0x0601;_WIN32_WINDOWS=0x0601;WIN32;_DEBUG;_WINDOWS;_USRDLL;SIMDATA_EXPORTS;IBM=1;XPLM200=1;XPLM210=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug\64\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug\64\TimedProcessing.pch</PrecompiledHeaderOutputFile>
@@ -150,6 +150,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\bHapticSDK\src\commonutils.cpp" />
+    <ClCompile Include="src\bHapticSDK\src\easywsclient.cpp" />
+    <ClCompile Include="src\bHapticSDK\src\HapticLibrary.cpp" />
+    <ClCompile Include="src\bHapticSDK\src\hapticsManager.cpp" />
+    <ClCompile Include="src\bHapticSDK\src\ProjectModel.cpp" />
+    <ClCompile Include="src\bHapticSDK\src\timer.cpp" />
+    <ClCompile Include="src\bHapticSDK\src\util.cpp" />
     <ClCompile Include="TimedProcessing.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,9 +168,21 @@
     <ClInclude Include="packages\glog.0.3.3.0\build\native\include\glog\raw_logging.h" />
     <ClInclude Include="packages\glog.0.3.3.0\build\native\include\glog\stl_logging.h" />
     <ClInclude Include="packages\glog.0.3.3.0\build\native\include\glog\vlog_is_on.h" />
+    <ClInclude Include="src\bHapticSDK\include\shared\HapticLibrary.h" />
+    <ClInclude Include="src\bHapticSDK\include\shared\model.h" />
+    <ClInclude Include="src\bHapticSDK\src\commonutils.h" />
+    <ClInclude Include="src\bHapticSDK\src\easywsclient.h" />
+    <ClInclude Include="src\bHapticSDK\src\hapticsManager.h" />
+    <ClInclude Include="src\bHapticSDK\src\json.hpp" />
+    <ClInclude Include="src\bHapticSDK\src\ProjectModel.h" />
+    <ClInclude Include="src\bHapticSDK\src\timer.h" />
+    <ClInclude Include="src\bHapticSDK\src\util.h" />
+    <ClInclude Include="src\ConfigLoader.hpp" />
+    <ClInclude Include="src\EventHandler.hpp" />
     <ClInclude Include="src\worker.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cpp.hint" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

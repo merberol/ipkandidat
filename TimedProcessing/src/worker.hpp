@@ -1,50 +1,87 @@
 #pragma once
 
 #include <iostream> 
-
- //#include <glog/logging.h>
+#include "bHapticSDK/include/shared/HapticLibrary.h"
 
 #define DEBUG
 
+
+using EventToFileMap = std::unordered_map<std::string, std::string>;
+
+
+
+
 class Worker {
+
+	EventToFileMap* eventMap;
 public:
 
-	Worker() {
+	Worker(std::string id) {
 		#ifdef DEBUG
-		AllocConsole();
-		freopen("CONOUT$", "w", stdout);
-		freopen("CONOUT$", "w", stderr);
+			AllocConsole();
+			auto out = freopen("CONOUT$", "w", stdout);
+			auto err = freopen("CONOUT$", "w", stderr);
+			std::cout << "DEBUG: Active" << std::endl;
 		#endif // DEBUG
+		
 
 		std::cout << "creating worker!" << std::endl;
 	}
 
+
+
+	
+
 	~Worker() {
 		std::cout << "destroying worker" << std::endl;
 	}
+	void addFileMap(EventToFileMap* eventFileMap) {
+		std::cout << "adding eventFileMap" << std::endl;
+		eventMap = eventFileMap;
+	}
+
+	void Ready(){
+#ifdef DEBUG
+		std::cout << "running 'ReadyEvent'" << std::endl;
+#endif // DEBUG
+		RegisterFeedbackFromTactFile("ReadyEvent", eventMap->at("ReadyEvent").c_str());
+		SubmitRegistered("ReadyEvent");
+	}
 
 	void SayHello() {
+#ifdef DEBUG
 		std::cout << "worker says Hello!" << std::endl;
+#endif // DEBUG
 	}
-
+// TODO rename for clarity of purpose
 	void HighAlt() {
+#ifdef DEBUG
 		std::cout << "gear down warning!" << std::endl;
+#endif // DEBUG
 	}
-
+	// TODO rename for clarity of purpose
 	void LowAlt() {
+#ifdef DEBUG
 		std::cout << "gear up warning!" << std::endl;
+#endif // DEBUG
 	}
 
 	void Stalling() {
+#ifdef DEBUG
 		std::cout << "stall warning!" << std::endl;
+#endif // DEBUG
 	}
 
 	void Redout() {
+#ifdef DEBUG
 		std::cout << "redout warning!" << std::endl;
+#endif // DEBUG
 	}
 
 	void Blackout() {
+#ifdef DEBUG
 		std::cout << "blackout warning!" << std::endl;
+#endif // DEBUG
 	}
 
 };

@@ -22,7 +22,6 @@
 #include <Carbon/Carbon.h>
 #endif
 #endif
- #define GLOG_NO_ABBREVIATED_SEVERITIES
 #include <stdio.h>
 #include <string.h>
 #include "XPLMProcessing.h"
@@ -33,7 +32,9 @@
 #include <unordered_map>
 #include <math.h>
 #include "src/EventHandler.hpp"
-
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 static std::vector<std::string> DataRefString{ "sim/flightmodel/position/elevation", "sim/flightmodel/position/local_x", "sim/flightmodel/position/local_y", "sim/flightmodel/position/local_z", "sim/flightmodel/failures/stallwarning", "sim/aircraft/gear/acf_gear_retract", "sim/aircraft/parts/acf_gear_deploy"};
 static std::unordered_map<std::string, XPLMDataRef> dataRefMap{};
@@ -49,9 +50,13 @@ static double CalculateDistance(std::vector<float> pos1, std::vector<float> pos2
 static double CalculateSpeed(float);
 static int DetectRedout(void);
 static int DetectBlackout(void);
+int GetGearRetractable(void);
 
 
-EventHandler eventHandler{};
+
+
+
+EventHandler* eventHandler;
 /* File to write data to. */
 static FILE *	gOutputFile;
 
@@ -81,6 +86,8 @@ PLUGIN_API int XPluginStart(
 	strcpy_s(outSig, 18, "liu.haptic_plugin");
 	strcpy_s(outDesc, 55, "A plugin for testing a haptic vest with the flightsim.");
 	
+	eventHandler = new EventHandler{ "se.liu.haptic_plugin" };
+
 	for (int i = 0; i < DataRefString.size(); i++) {
 		dataRefMap.emplace(DataRefString[i], XPLMFindDataRef(DataRefString[i].c_str()));
 	}
@@ -89,19 +96,24 @@ PLUGIN_API int XPluginStart(
 		HapticFlightLoopCallback,	/* Callback */
 		1.0,						/* Interval */
 		NULL);						/* refcon not used. */
-
+	// eventHandler->ReadyEvent();
 	return 1;
 }
 
 PLUGIN_API void	XPluginStop(void)
 {
 	// Call destructor for allocated resources
+	delete eventHandler;
+	eventHandler = nullptr;
+
+
 	XPLMUnregisterFlightLoopCallback(HapticFlightLoopCallback, NULL);
 }
 
 PLUGIN_API void XPluginDisable(void)
 {
 	// Stop communicating with worker
+
 }
 
 PLUGIN_API int XPluginEnable(void)
@@ -117,6 +129,8 @@ PLUGIN_API void XPluginReceiveMessage(
 {
 }
 
+bool first{ true };
+
 float	HapticFlightLoopCallback(
                                    float                inElapsedSinceLastCall,    
                                    float                inElapsedTimeSinceLastFlightLoop,    
@@ -128,24 +142,42 @@ float	HapticFlightLoopCallback(
 	float	lat = XPLMGetDataf(gPlaneLat);
 	float	lon = XPLMGetDataf(gPlaneLon);
 	float	el = XPLMGetDataf(gPlaneEl);
+
+	if (first) {
+#ifdef DEBUG
+		std::cout << "sending ready event from Xplane interface" << std::endl;
+#endif // DEBUG
+		eventHandler->ReadyEvent();
+		first = !first;
+	}
 	
-	if (eventHandler.DoGearEvent() && XPLMGetDatai(dataRefMap.at("sim/aircraft/gear/acf_gear_retract"))) {
-		eventHandler.GearEvent(
+	if (eventHandler->DoGearEvent() && GetGearRetractable()) {
+#ifdef DEBUG
+		std::cout << "sending gear event from Xplane interface" << std::endl;
+#endif // DEBUG
+
+		eventHandler->GearEvent(
 			CalculateSpeed(inElapsedSinceLastCall),
 			GetElevation(),
 			GetGearDeployed()
 		);
 	}
 
-	if (eventHandler.DoStallingEvent() && XPLMGetDatai(dataRefMap.at("sim/flightmodel/failures/stallwarning"))) {
-		eventHandler.StallingEvent(
+	if (eventHandler->DoStallingEvent() && XPLMGetDatai(dataRefMap.at("sim/flightmodel/failures/stallwarning"))) {
+#ifdef DEBUG
+		std::cout << "sending stall event from Xplane interface" << std::endl;
+#endif // DEBUG
+		eventHandler->StallingEvent(
 			GetStallWarning()
 		);
 	}
 
-	if (eventHandler.DoXOutEvents()) {
-		eventHandler.RedoutEvent(DetectRedout());
-		eventHandler.BlackoutEvent(DetectBlackout());
+	if (eventHandler->DoXOutEvents()) {
+#ifdef DEBUG
+		std::cout << "sending readout and blackout events from Xplane interface" << std::endl;
+#endif // DEBUG
+		eventHandler->RedoutEvent(DetectRedout());
+		eventHandler->BlackoutEvent(DetectBlackout());
 	}
 	
 	/* Return 1.0 to indicate that we want to be called again in 1 second. */

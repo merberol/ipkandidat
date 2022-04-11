@@ -1,16 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\test",
-    "\\test\\Debug",
-    "\\test\\test",
-    "\\test\\test\\Debug",
-    "\\test\\test\\x64",
-    "\\test\\test\\x64\\Debug",
-    "\\test\\test\\x64\\Debug\\test.tlog",
-    "\\test\\x64",
-    "\\test\\x64\\Debug"
+    ""
   ],
-  "SelectedNode": "\\test\\test\\x64\\Debug\\test.exe.recipe",
+  "SelectedNode": "\\TimedProcessing.sln",
   "PreviewInSolutionExplorer": false
 }
