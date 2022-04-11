@@ -1,6 +1,10 @@
-**/.vs
 **/*.vcxproj
 **/**.db
 **/**.suo
-**/debug/**
+**/debug
 **/**.obj
+**/*.vs
+
+
+
+
