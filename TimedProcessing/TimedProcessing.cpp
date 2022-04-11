@@ -36,7 +36,15 @@
 #include <fstream>
 #include <sstream>
 
-static std::vector<std::string> DataRefString{ "sim/flightmodel/position/elevation", "sim/flightmodel/position/local_x", "sim/flightmodel/position/local_y", "sim/flightmodel/position/local_z", "sim/flightmodel/failures/stallwarning", "sim/aircraft/gear/acf_gear_retract", "sim/aircraft/parts/acf_gear_deploy"};
+static std::vector<std::string> DataRefString{
+	"sim/flightmodel/position/elevation",
+	"sim/flightmodel/position/local_x",
+	"sim/flightmodel/position/local_y",
+	"sim/flightmodel/position/local_z",
+	"sim/flightmodel/failures/stallwarning",
+	"sim/aircraft/gear/acf_gear_retract",
+	"sim/flightmodel/movingparts/gear1def"
+};
 static std::unordered_map<std::string, XPLMDataRef> dataRefMap{};
 static std::vector<float> prevPos{0,0,0};
 static std::vector<float> currPos{0,0,0};
@@ -51,9 +59,6 @@ static double CalculateSpeed(float);
 static int DetectRedout(void);
 static int DetectBlackout(void);
 int GetGearRetractable(void);
-
-
-
 
 
 EventHandler* eventHandler;
@@ -174,7 +179,7 @@ float	HapticFlightLoopCallback(
 
 	if (eventHandler->DoXOutEvents()) {
 #ifdef DEBUG
-		std::cout << "sending readout and blackout events from Xplane interface" << std::endl;
+		std::cout << "sending redout and blackout events from Xplane interface" << std::endl;
 #endif // DEBUG
 		eventHandler->RedoutEvent(DetectRedout());
 		eventHandler->BlackoutEvent(DetectBlackout());
@@ -218,7 +223,7 @@ std::vector<float> GetPosition(void)
 * @returns landing gear deployment, 0.0->1.0 
 */
 float GetGearDeployed(void) {
-	float deployed{ XPLMGetDataf(dataRefMap.at("sim/aircraft/parts/acf_gear_deploy")) };
+	float deployed{ XPLMGetDataf(dataRefMap.at("sim/flightmodel/movingparts/gear1def")) };
 	return deployed;
 }
 

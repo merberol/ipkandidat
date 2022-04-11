@@ -39,14 +39,11 @@ public:
 		}
 		std::cout << "Starting initialisation" << std::endl;
 		auto start = std::chrono::system_clock::now();
-
 		Initialise(id.c_str(), "SampleApp");
-
 		auto end = std::chrono::system_clock::now();
 
 		std::chrono::duration<double> elapsed_seconds = end - start;
 		std::cout << "2. Initialise() elapsed time: " << elapsed_seconds.count() << "s\n";
-
 
 		worker.SayHello();
 		ConfigLoader configLoader{};
@@ -55,7 +52,6 @@ public:
 		eventMap = result.first;
 		eventFileMap = result.second;
 		worker.addFileMap(&eventFileMap);
-
 	};
 
 	~EventHandler() {
@@ -63,16 +59,15 @@ public:
 	}
 
 	void ReadyEvent() {
-		std::cout << "receiving ready event from xplane and forwarding to worker" << std::endl;
+		//std::cout << "receiving ready event from xplane and forwarding to worker" << std::endl;
 		worker.Ready();
 	}
 
 	bool DoGearEvent() {
-		
-		std::cout << "checking eventMap" << std::endl;;
+		//std::cout << "checking eventMap" << std::endl;;
 		bool result{};
 		try {
-			result = eventMap.at("GearUppWarn") || eventMap.at("GearDownWarn");
+			result = eventMap.at("GearUpWarn") || eventMap.at("GearDownWarn");
 		}
 		catch (std::exception& e) {
 			result = false;
@@ -81,19 +76,19 @@ public:
 	}
 
 	void GearEvent(double speed, int elevation, float gearDeployment) {
-		
-		if (elevation >= 1000 && gearDeployment < 1.0 ){
-			std::cout << "receiving gear event from xplane and forwarding HighAlt to worker" << std::endl;
-			worker.HighAlt();
+#ifdef DEBUG
+		//std::cout << "entering gear event with gear deployment: " << gearDeployment << std::endl;
+#endif //DEBUG
+		if (elevation >= 1000 && gearDeployment > 0.0 ){
+			worker.HighAltGearDown();
 		}
-		if (elevation < 500 && gearDeployment > 0.0) {
-			std::cout << "receiving gear event from xplane and forwarding LowAlt to worker" << std::endl;
-			worker.LowAlt();
+		if (elevation < 500 && gearDeployment < 1.0) {
+			worker.LowAltGearUp();
 		}
 	}
 
 	bool DoStallingEvent() {
-		std::cout << "checking if stalling event active" << std::endl;
+		//std::cout << "checking if stalling event active" << std::endl;
 		bool result{};
 		try {
 			result = eventMap.at("StallWarn");
@@ -112,20 +107,20 @@ public:
 	}
 
 	bool DoXOutEvents() {
-		std::cout << "checking if redout and blackout events are active" << std::endl;
-		return true;
+		//std::cout << "checking if redout and blackout events are active" << std::endl;
+		return false;
 	}
 
 	void RedoutEvent(int redout) {
 		if (redout == 1) {
-			std::cout << "receiving redout event from xplane and forwarding redout to worker" << std::endl;
+			//std::cout << "receiving redout event from xplane and forwarding redout to worker" << std::endl;
 			worker.Redout();
 		}
 	}
 
 	void BlackoutEvent(int blackout) {
 		if (blackout == 1) {
-			std::cout << "receiving blackout event from xplane and forwarding black to worker" << std::endl;
+			//std::cout << "receiving blackout event from xplane and forwarding black to worker" << std::endl;
 			worker.Blackout();
 		}
 	}

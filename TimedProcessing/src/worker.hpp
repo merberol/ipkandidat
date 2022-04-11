@@ -8,14 +8,10 @@
 
 using EventToFileMap = std::unordered_map<std::string, std::string>;
 
-
-
-
 class Worker {
 
 	EventToFileMap* eventMap;
 public:
-
 	Worker(std::string id) {
 		#ifdef DEBUG
 			AllocConsole();
@@ -23,18 +19,14 @@ public:
 			auto err = freopen("CONOUT$", "w", stderr);
 			std::cout << "DEBUG: Active" << std::endl;
 		#endif // DEBUG
-		
 
 		std::cout << "creating worker!" << std::endl;
 	}
 
-
-
-	
-
 	~Worker() {
 		std::cout << "destroying worker" << std::endl;
 	}
+
 	void addFileMap(EventToFileMap* eventFileMap) {
 		std::cout << "adding eventFileMap" << std::endl;
 		eventMap = eventFileMap;
@@ -53,16 +45,16 @@ public:
 		std::cout << "worker says Hello!" << std::endl;
 #endif // DEBUG
 	}
-// TODO rename for clarity of purpose
-	void HighAlt() {
+
+	void HighAltGearDown() {
 #ifdef DEBUG
-		std::cout << "gear down warning!" << std::endl;
+		//std::cout << "high alt, gear down warning!" << std::endl;
 #endif // DEBUG
 	}
-	// TODO rename for clarity of purpose
-	void LowAlt() {
+
+	void LowAltGearUp() {
 #ifdef DEBUG
-		std::cout << "gear up warning!" << std::endl;
+		//std::cout << "low alt, gear up warning!" << std::endl;
 #endif // DEBUG
 	}
 

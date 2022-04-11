@@ -1,13 +1,13 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(500,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   TimedProcessing.cpp
-P:\plugg\ipkandidat\TimedProcessing\src\worker.hpp(22,15): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-P:\plugg\ipkandidat\TimedProcessing\src\worker.hpp(23,15): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-P:\plugg\ipkandidat\TimedProcessing\src\EventHandler.hpp(77,26): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\src\EventHandler.hpp(101,26): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(186,25): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(202,25): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(243,25): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(259,25): warning C4101: 'e': unreferenced local variable
+P:\plugg\ipkandidat\TimedProcessing\src\worker.hpp(18,15): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+P:\plugg\ipkandidat\TimedProcessing\src\worker.hpp(19,15): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+P:\plugg\ipkandidat\TimedProcessing\src\EventHandler.hpp(72,26): warning C4101: 'e': unreferenced local variable
+P:\plugg\ipkandidat\TimedProcessing\src\EventHandler.hpp(96,26): warning C4101: 'e': unreferenced local variable
+P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(200,25): warning C4101: 'e': unreferenced local variable
+P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(216,25): warning C4101: 'e': unreferenced local variable
+P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(257,25): warning C4101: 'e': unreferenced local variable
+P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(273,25): warning C4101: 'e': unreferenced local variable
      Creating library .\Debug\64\TimedProcessing.lib and object .\Debug\64\TimedProcessing.exp
 LINK : warning LNK4217: symbol 'TryGetExePath' defined in 'HapticLibrary.obj' is imported by 'TimedProcessing.obj' in function '"public: __cdecl EventHandler::EventHandler(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0EventHandler@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)'
 LINK : warning LNK4217: symbol 'GetExePath' defined in 'HapticLibrary.obj' is imported by 'TimedProcessing.obj' in function '"public: __cdecl EventHandler::EventHandler(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0EventHandler@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)'
