@@ -1,13 +1,96 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(500,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  commonutils.cpp
+  easywsclient.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(102,16): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(199,31): warning C4244: 'argument': conversion from 'socket_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(203,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(224,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(471,100): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(473,96): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(476,105): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(478,96): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(479,97): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(481,108): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(483,121): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(484,103): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(485,78): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  HapticLibrary.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(23,13): warning C4273: 'GetExePath': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(53,24): message : see previous definition of 'GetExePath'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(57,6): warning C4273: 'TryGetExePath': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(51,17): message : see previous definition of 'TryGetExePath'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(62,9): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(88,9): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(94,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(98,6): warning C4273: 'SubmitPathArray': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(92,17): message : see previous definition of 'SubmitPathArray'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(111,6): warning C4273: 'SubmitByteArray': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(89,17): message : see previous definition of 'SubmitByteArray'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(124,6): warning C4273: 'ChangeUrl': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(49,17): message : see previous definition of 'ChangeUrl'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(129,6): warning C4273: 'InitialiseSync': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(57,17): message : see previous definition of 'InitialiseSync'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(134,6): warning C4273: 'Initialise': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(56,17): message : see previous definition of 'Initialise'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(139,6): warning C4273: 'Destroy': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(60,17): message : see previous definition of 'Destroy'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(144,6): warning C4273: 'RegisterFeedback': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(65,17): message : see previous definition of 'RegisterFeedback'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(149,6): warning C4273: 'RegisterFeedbackFromTactFile': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(67,17): message : see previous definition of 'RegisterFeedbackFromTactFile'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(154,6): warning C4273: 'RegisterFeedbackFromTactFileReflected': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(69,17): message : see previous definition of 'RegisterFeedbackFromTactFileReflected'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(206,6): warning C4273: 'LoadAndRegisterFeedback': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(74,17): message : see previous definition of 'LoadAndRegisterFeedback'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(211,6): warning C4273: 'SubmitRegistered': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(77,17): message : see previous definition of 'SubmitRegistered'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(216,6): warning C4273: 'SubmitRegisteredAlt': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(85,17): message : see previous definition of 'SubmitRegisteredAlt'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(221,6): warning C4273: 'SubmitRegisteredWithOption': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(87,17): message : see previous definition of 'SubmitRegisteredWithOption'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(233,6): warning C4273: 'Submit': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(97,17): message : see previous definition of 'Submit'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(237,6): warning C4273: 'SubmitRegisteredStartMillis': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(79,17): message : see previous definition of 'SubmitRegisteredStartMillis'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(242,6): warning C4273: 'SubmitDot': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(101,17): message : see previous definition of 'SubmitDot'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(247,6): warning C4273: 'SubmitPath': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(106,17): message : see previous definition of 'SubmitPath'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(252,6): warning C4273: 'IsFeedbackRegistered': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(109,17): message : see previous definition of 'IsFeedbackRegistered'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(257,6): warning C4273: 'IsPlaying': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(112,17): message : see previous definition of 'IsPlaying'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(262,6): warning C4273: 'IsPlayingKey': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(115,17): message : see previous definition of 'IsPlayingKey'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(267,6): warning C4273: 'TurnOff': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(118,17): message : see previous definition of 'TurnOff'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(272,6): warning C4273: 'TurnOffKey': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(121,17): message : see previous definition of 'TurnOffKey'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(277,6): warning C4273: 'EnableFeedback': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(124,17): message : see previous definition of 'EnableFeedback'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(282,6): warning C4273: 'DisableFeedback': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(127,17): message : see previous definition of 'DisableFeedback'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(287,6): warning C4273: 'ToggleFeedback': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(130,17): message : see previous definition of 'ToggleFeedback'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(292,6): warning C4273: 'IsDevicePlaying': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(133,17): message : see previous definition of 'IsDevicePlaying'
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(297,6): warning C4273: 'TryGetResponseForPosition': inconsistent dll linkage
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\include\shared\HapticLibrary.h(142,17): message : see previous definition of 'TryGetResponseForPosition'
+  hapticsManager.cpp
+  ProjectModel.cpp
+  timer.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\timer.cpp(51,44): warning C4101: 'e': unreferenced local variable
+  util.cpp
   TimedProcessing.cpp
-P:\plugg\ipkandidat\TimedProcessing\src\worker.hpp(18,15): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-P:\plugg\ipkandidat\TimedProcessing\src\worker.hpp(19,15): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-P:\plugg\ipkandidat\TimedProcessing\src\EventHandler.hpp(72,26): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\src\EventHandler.hpp(96,26): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(200,25): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(216,25): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(257,25): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(273,25): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\worker.hpp(18,15): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\worker.hpp(19,15): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\EventHandler.hpp(72,26): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\EventHandler.hpp(96,26): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\TimedProcessing.cpp(200,25): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\TimedProcessing.cpp(216,25): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\TimedProcessing.cpp(257,25): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\TimedProcessing.cpp(273,25): warning C4101: 'e': unreferenced local variable
+  Generating Code...
      Creating library .\Debug\64\TimedProcessing.lib and object .\Debug\64\TimedProcessing.exp
 LINK : warning LNK4217: symbol 'TryGetExePath' defined in 'HapticLibrary.obj' is imported by 'TimedProcessing.obj' in function '"public: __cdecl EventHandler::EventHandler(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0EventHandler@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)'
 LINK : warning LNK4217: symbol 'GetExePath' defined in 'HapticLibrary.obj' is imported by 'TimedProcessing.obj' in function '"public: __cdecl EventHandler::EventHandler(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0EventHandler@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)'

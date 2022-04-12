@@ -23,9 +23,6 @@ public:
 		std::cout << "ConfigLoader says Hello!" << std::endl;
 	}
 
-	/**               RUN
-	* 
-	*/
 	resultType run() {
 		// Read from file
 		std::string fileData = "";
@@ -40,10 +37,7 @@ public:
 		return data;
 	}
 
-	
-
 	resultType loadData() {
-		
 		std::vector < std::pair<std::string, std::string>> FiletoEventName{};
 		std::unordered_map<std::string, bool> dataMap;
 		std::unordered_map<std::string, std::string> eventFileMap;
@@ -52,7 +46,6 @@ public:
 		if (fileIn.is_open()) {
 			std::cout << "file is open" << std::endl;
 		}
-
 	
 		std::string word{};
 		std::vector<std::string> row{};
@@ -121,13 +114,6 @@ public:
 			}
 			fileIn.close();
 			std::cout << "file is read" << std::endl;
-
-			//Inclusion of library for this function ruins the TryGetExePath and GetExePath functions.
-			//RegisterFeedbackFromTactFile(eventName.c_str(), inputString);
-			//std::cout << "4. RegisterFeedbackFromTactFile" << std::endl;
-			//SubmitRegistered(eventName.c_str());
-			//std::cout << "5. submitted" << std::endl;
-
 			return inputString;
 		} else {
 			if(fileIn.is_open())

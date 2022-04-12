@@ -1,16 +1,21 @@
-p:\plugg\ipkandidat\timedprocessing\debug\64\timedprocessing.obj
-p:\plugg\ipkandidat\timedprocessing\debug\64\util.obj
-p:\plugg\ipkandidat\timedprocessing\debug\64\timer.obj
-p:\plugg\ipkandidat\timedprocessing\debug\64\projectmodel.obj
-p:\plugg\ipkandidat\timedprocessing\debug\64\hapticsmanager.obj
-p:\plugg\ipkandidat\timedprocessing\debug\64\hapticlibrary.obj
-p:\plugg\ipkandidat\timedprocessing\debug\64\easywsclient.obj
-p:\plugg\ipkandidat\timedprocessing\debug\64\commonutils.obj
-p:\plugg\ipkandidat\timedprocessing\debug\64\timedprocessing.exp
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timedprocessing.obj
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\util.obj
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timer.obj
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\projectmodel.obj
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\hapticsmanager.obj
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\hapticlibrary.obj
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\easywsclient.obj
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\commonutils.obj
+c:\x-plane 11\resources\plugins\liuhaptics\win.xpl
 c:\x-plane 11\resources\plugins\liuhaptics\win.pdb
-p:\plugg\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\link.read.1.tlog
-p:\plugg\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\cl.write.1.tlog
-p:\plugg\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\link.write.1.tlog
-p:\plugg\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\link.command.1.tlog
-p:\plugg\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\cl.read.1.tlog
-p:\plugg\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\cl.command.1.tlog
+p:\plugg\ipkandidat\timedprocessing\debug\64\timedprocessing.lib
+p:\plugg\ipkandidat\timedprocessing\debug\64\timedprocessing.exp
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timedprocessing.lib
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timedprocessing.exp
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\cl.command.1.tlog
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\cl.read.1.tlog
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\cl.write.1.tlog
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\link.command.1.tlog
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\link.read.1.tlog
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\link.write.1.tlog
+c:\users\marfr581\desktop\ipkandidat\timedprocessing\debug\64\timedprocessing.tlog\timedprocessing.write.1u.tlog
