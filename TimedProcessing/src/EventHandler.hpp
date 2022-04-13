@@ -3,12 +3,15 @@
 
 
 #include <windows.h>
-#include "worker.hpp"
+#include "HapticInterface.hpp"
 #include "ConfigLoader.hpp"
 #include "bHapticSDK/include/shared/HapticLibrary.h"
 #include <chrono>
+#include <tuple>
+#include "pyFunction.hpp"
 
-using resultType = std::pair<std::unordered_map<std::string, bool>, std::unordered_map<std::string, std::string>>;
+#include <unordered_map>
+
 
 
 class EventHandler
@@ -18,6 +21,7 @@ public:
 	std::string _id;
 	std::unordered_map<std::string, bool> eventMap;
 	std::unordered_map<std::string, std::string> eventFileMap;
+	std::vector<std::string> dataRefVector;
 	
 	EventHandler() = default;
 
@@ -48,9 +52,10 @@ public:
 		worker.SayHello();
 		ConfigLoader configLoader{};
 		configLoader.SayHello();
-		resultType result = configLoader.run();
-		eventMap = result.first;
-		eventFileMap = result.second;
+		ResultType result = configLoader.run();
+		eventMap = std::get<0>(result);
+		eventFileMap = std::get<1>(result);
+		dataRefVector = std::get<2>(result);
 		worker.addFileMap(&eventFileMap);
 	};
 
@@ -126,7 +131,7 @@ public:
 	}
 
 private:
-	Worker worker{_id};
+	HapticInterface worker{_id};
 
 	
 

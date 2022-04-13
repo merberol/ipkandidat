@@ -7,7 +7,10 @@
 #include "EventHandler.hpp"
 #include "bHapticSDK/include/shared/HapticLibrary.h"
 
-using resultType = std::pair<std::unordered_map<std::string, bool>, std::unordered_map<std::string, std::string>>;
+using EventMap = std::unordered_map < std::string, bool>;
+using EventFileMap = std::unordered_map<std::string, std::string>;
+using DataRefVector = std::vector<std::string>;
+using ResultType = std::tuple<EventMap, EventFileMap, DataRefVector>;
 
 
 struct ConfigLoader {
@@ -23,7 +26,7 @@ public:
 		std::cout << "ConfigLoader says Hello!" << std::endl;
 	}
 
-	resultType run() {
+	ResultType run() {
 		// Read from file
 		std::string fileData = "";
 		
@@ -32,12 +35,12 @@ public:
 		//"EventName;TactFileName;Used;MiscAllowed;Misc";	// Excel readable header line
 
 		// Create map to return
-		resultType data = loadData();
+		ResultType data = loadData();
 		std::cout << "exiting run" << std::endl;
 		return data;
 	}
 
-	resultType loadData() {
+	ResultType loadData() {
 		std::vector < std::pair<std::string, std::string>> FiletoEventName{};
 		std::unordered_map<std::string, bool> dataMap;
 		std::unordered_map<std::string, std::string> eventFileMap;
@@ -92,7 +95,7 @@ public:
 			eventFileMap.emplace(p.second,file);
 		}
 		std::cout << "returning datamap" << std::endl;
-		resultType result{ dataMap, eventFileMap };
+		ResultType result{ dataMap, eventFileMap };
 		return result;
 	}
 	

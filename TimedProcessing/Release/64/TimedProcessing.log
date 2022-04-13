@@ -1,22 +1,34 @@
-﻿  TimedProcessing.cpp
-P:\plugg\ipkandidat\TimedProcessing\packages\gflags.2.0.1.0\build\native\include\gflags\gflags.h(160,15): warning C4251: 'google::CommandLineFlagInfo::name': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of struct 'google::CommandLineFlagInfo'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstring(4927): message : see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-P:\plugg\ipkandidat\TimedProcessing\packages\gflags.2.0.1.0\build\native\include\gflags\gflags.h(161,15): warning C4251: 'google::CommandLineFlagInfo::type': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of struct 'google::CommandLineFlagInfo'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstring(4927): message : see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-P:\plugg\ipkandidat\TimedProcessing\packages\gflags.2.0.1.0\build\native\include\gflags\gflags.h(162,15): warning C4251: 'google::CommandLineFlagInfo::description': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of struct 'google::CommandLineFlagInfo'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstring(4927): message : see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-P:\plugg\ipkandidat\TimedProcessing\packages\gflags.2.0.1.0\build\native\include\gflags\gflags.h(163,15): warning C4251: 'google::CommandLineFlagInfo::current_value': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of struct 'google::CommandLineFlagInfo'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstring(4927): message : see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-P:\plugg\ipkandidat\TimedProcessing\packages\gflags.2.0.1.0\build\native\include\gflags\gflags.h(164,15): warning C4251: 'google::CommandLineFlagInfo::default_value': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of struct 'google::CommandLineFlagInfo'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstring(4927): message : see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-P:\plugg\ipkandidat\TimedProcessing\packages\gflags.2.0.1.0\build\native\include\gflags\gflags.h(165,15): warning C4251: 'google::CommandLineFlagInfo::filename': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of struct 'google::CommandLineFlagInfo'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.31.31103\include\xstring(4927): message : see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-P:\plugg\ipkandidat\TimedProcessing\packages\glog.0.3.3.0\build\native\include\glog\logging.h(1158,32): warning C4251: 'google::LogMessage::LogStream::streambuf_': class 'google::base_logging::LogStreamBuf' needs to have dll-interface to be used by clients of class 'google::LogMessage::LogStream'
-P:\plugg\ipkandidat\TimedProcessing\packages\glog.0.3.3.0\build\native\include\glog\logging.h(1088): message : see declaration of 'google::base_logging::LogStreamBuf'
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(147,25): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(164,25): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(182,25): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(201,25): warning C4101: 'e': unreferenced local variable
-P:\plugg\ipkandidat\TimedProcessing\TimedProcessing.cpp(218,25): warning C4101: 'e': unreferenced local variable
-     Creating library .\Release\64\TimedProcessing.lib and object .\Release\64\TimedProcessing.exp
-  TimedProcessing.vcxproj -> P:\plugg\ipkandidat\TimedProcessing\Release\plugins\TimedProcessing\64\win.xpl
+﻿  commonutils.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\hapticsManager.h(7,10): fatal error C1083: Cannot open include file: 'bHapticSDK/include/shared/model.h': No such file or directory
+  easywsclient.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(102,16): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(199,31): warning C4244: 'argument': conversion from 'socket_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(203,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(224,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(471,100): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(473,96): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(476,105): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(478,96): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(479,97): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(481,108): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(483,121): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(484,103): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\easywsclient.cpp(485,78): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  HapticLibrary.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\HapticLibrary.cpp(9,10): fatal error C1083: Cannot open include file: 'bHapticSDK/include/shared/HapticLibrary.h': No such file or directory
+  hapticsManager.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\hapticsManager.h(7,10): fatal error C1083: Cannot open include file: 'bHapticSDK/include/shared/model.h': No such file or directory
+  ProjectModel.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\ProjectModel.h(13,10): fatal error C1083: Cannot open include file: 'bHapticSDK/include/shared/model.h': No such file or directory
+  timer.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\timer.cpp(51,44): warning C4101: 'e': unreferenced local variable
+  util.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\bHapticSDK\src\util.h(5,10): fatal error C1083: Cannot open include file: 'bHapticSDK/include/shared/model.h': No such file or directory
+  TimedProcessing.cpp
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\EventHandler.hpp(72,26): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\src\EventHandler.hpp(96,26): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\TimedProcessing.cpp(200,25): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\TimedProcessing.cpp(216,25): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\TimedProcessing.cpp(257,25): warning C4101: 'e': unreferenced local variable
+C:\Users\marfr581\Desktop\ipkandidat\TimedProcessing\TimedProcessing.cpp(273,25): warning C4101: 'e': unreferenced local variable
+  Generating Code...
