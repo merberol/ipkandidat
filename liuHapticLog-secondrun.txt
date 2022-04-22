@@ -1,0 +1,1331 @@
+
+*************** Num datapoints Config loader row 149 = 0 *************
+
+*************** Num datapoints Config loader row 149 = 3 *************
+
+ type : int
+ refstring : sim/aircraft/gear/acf_gear_retract
+ type : float
+ refstring : sim/flightmodel/movingparts/gear1def
+ type : int
+ refstring : sim/flightmodel/position/elevation
+*************** Num datapoints Config loader row 149 = 3 *************
+
+ type : int
+ refstring : sim/aircraft/gear/acf_gear_retract
+ type : float
+ refstring : sim/flightmodel/movingparts/gear1def
+ type : int
+ refstring : sim/flightmodel/position/elevation
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event ReadyEvent
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doReady
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+getIndex
+*************
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+flight loop
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearUpWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearUp
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
+
+***************
+Get is usedp
+*************
+
+***************
+getIndex
+*************
+
+***************
+Running event GearDownWarn
+*************
+
+***************
+Run eventp
+*************
+
+
+In CompileArgs
+index retrieved
+dataRefStrings retreived
+result created, returning from CompileArgs
+
+
+***************
+getIndex
+*************
+
+***************
+flight loop
+*************
+
+***************
+In Call
+*************
+ calling : Resources.plugins.LiuHaptics.PythonFiles.doGearDown
+ length of args vec = 0
+ expected length by argc = 0
+ Exiting Call 
+
+***************
+exiting run event
+*************
