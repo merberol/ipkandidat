@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <windows.h>
+#include <algorithm>
 #include "includes\bHaptics\HapticLibrary.h"
 #include "pyFunction.hpp"
 
@@ -16,7 +17,8 @@ struct ConfigLoader {
 		std::cout << "ConfigLoader says Hello!" << std::endl;
 	}
 
-	ResultType run() {
+	void run(EventNameMap & eventNameMap, EventUsedVec & eventUsed,  TactFileVec & tactFiles, RefPathVector & refPathVec,
+			std::vector<std::vector<RefTypePair>> & eventTypeRefs,  PyFileNameVec & pyFileNames ) {
 		// Read from file
 		std::string fileData = "";
 		
@@ -25,21 +27,16 @@ struct ConfigLoader {
 		//"EventName;TactFileName;Used;MiscAllowed;Misc";	// Excel readable header line
 
 		// Create map to return
-		ResultType data = loadData();
+		loadData(eventNameMap, eventUsed,  tactFiles, refPathVec,
+			eventTypeRefs,  pyFileNames );
 		std::cout << "exiting run" << std::endl;
-		return data;
+		return ;
 	}
 
-	ResultType loadData() {
-		EventNameMap eventNameMap{};
-		EventUsedVec eventUsed{};
-		TactFileVec tactFiles{};
-		RefPathVector refPathVec{};
-		std::vector<std::vector<RefTypePair>> eventTypeRefs{};
-		std::vector<std::shared_ptr<PyFunc>> pyFuncs{};
-		
+	void loadData(EventNameMap & eventNameMap, EventUsedVec & eventUsed,  TactFileVec & tactFiles, RefPathVector & refPathVec,
+			std::vector<std::vector<RefTypePair>> & eventTypeRefs,  PyFileNameVec & pyFileNames ) {
+
 		TactFileNamesVec tactFileNames{};
-		PyFileNameVec pyFileNames{};
 
 		processConfig(
 		eventNameMap,
@@ -67,7 +64,7 @@ struct ConfigLoader {
 
 		ResultType result{eventNameMap, eventUsed, tactFiles, refPathVec, eventTypeRefs, pyFileNames};
 		std::cout << "returning datamap" << std::endl;
-		return result;
+		return;
 	}
 	
 	std::string LoadTactFile(std::string fileName = "test.tact") {
@@ -105,6 +102,7 @@ struct ConfigLoader {
 		std::vector<std::string> &pyFileNames,
 		std::vector<std::string> &refVec
 		){
+
 		std::fstream fileIn;
 		fileIn.open("Resources\\plugins\\LiuHaptics\\ConfigCSV.csv", std::fstream::in);
 		if (fileIn.is_open()) {
@@ -153,6 +151,7 @@ struct ConfigLoader {
 					int idx = i+5;
 					outfile << "\n type : " << row[idx];
 					outfile << "\n refstring : " << row[idx+1];
+					refVec.push_back(row[idx+1]);
 					RefTypePair tmp{row[idx], row[idx+1]};
 					eventRefs.push_back(tmp);
 				}
@@ -161,13 +160,18 @@ struct ConfigLoader {
 			eventTypeRefs.push_back(eventRefs);
 			tactFileNames.push_back(tactfilename); // tact file to event 
 
-			// create event map
 			
+
 			eventUsed.push_back(used);
 			eventNameMap.emplace(eventName, index);
 			index++;
 		}
 		fileIn.close();
+		// clean refVec
+		std::sort(begin(refVec), end(refVec));
+		auto c_itr = std::unique(begin(refVec), end(refVec));
+		refVec.erase(c_itr, refVec.end());
+
 		std::cout << "closed main data file" << std::endl;
 	}
 

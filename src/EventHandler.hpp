@@ -16,23 +16,18 @@
 #include "ConfigLoader.hpp"
 #include "includes\bHaptics\HapticLibrary.h"
 #include "XPLMDataAccess.h"
+#include "pyVar.hpp"
 
 #define DEBUG
 
 class EventHandler;
 
 class HapticInterface {
-
-
 	EventToFileVec eventFileVec{};
 public:
 	HapticInterface();
-
-
 	~HapticInterface();
-
 	void send(std::string eventName, EventHandler const& eventHandler);
-
 	void addFileMap(EventToFileVec eventFileVec);
 };
 
@@ -41,12 +36,12 @@ class EventHandler
 
 public:
 	std::string _id;
-	EventNameMap eventNameMap;
-	EventUsedVec eventUsed;
+	EventNameMap eventNameMap{};
+	EventUsedVec eventUsed{};
 
-	std::vector<std::vector<RefTypePair>> eventTypeRefs;
-	RefPathVector refPathVec;
-	PyFileNameVec pyFuncs;
+	std::vector<std::vector<RefTypePair>> eventTypeRefs{};
+	RefPathVector refPathVec{};
+	PyFileNameVec pyFuncs{};
 	
 	EventHandler() = default;
 
@@ -56,14 +51,13 @@ public:
 		CPyInstance pyInstance;
 		
 		char playerPath[200];
-		int size = 2;
-		bool res = TryGetExePath(playerPath, size);
+		int esize = 2;
+		bool res = TryGetExePath(playerPath, esize);
 		auto path = GetExePath();
 
 		if (res) {
 			std::cout << "1. getExePath bHaptics Player is installed:  " << playerPath << std::endl << path << std::endl;
-			std::cout << "1. player path size:  " << size << std::endl;
-
+			std::cout << "1. player path size:  " << esize << std::endl;
 		}
 		else {
 			std::cout << "1. Cannot find exe path.  " << std::endl;
@@ -79,15 +73,9 @@ public:
 		// worker.SayHello();
 		ConfigLoader configLoader{};
 		configLoader.SayHello();
+		TactFileVec tactFiles{};
 
-		ResultType result = configLoader.run();
-
-		eventNameMap = std::get<0>(result);
-		eventUsed = std::get<1>(result);
-		TactFileVec tactFiles = std::get<2>(result);
-		refPathVec = std::get<3>(result);
-		eventTypeRefs = std::get<4>(result);
-		pyFuncs = std::get<5>(result);
+		configLoader.run(eventNameMap, eventUsed, tactFiles, refPathVec, eventTypeRefs, pyFuncs);
 
 		worker.addFileMap(tactFiles);
 	};
@@ -97,22 +85,55 @@ public:
 	}
 
 	void RunEvent(std::string eventName, DataRefMap const& dataRefMap) {
-			 	std::ofstream outfile;
+		std::ofstream outfile;
 		outfile.open("liuHapticLog.txt", std::ios_base::app);
-  		outfile << "\n***************\nRun eventp\n*************\n";
+  		outfile << "\n*************** in EventHandler Run event *************\n";
 		outfile.close();
 		// first we need to compile arguments
-		std::vector<CPyObject> args = CompileArgs(eventName, dataRefMap);
-	
+		std::vector<PyVar> args{};
+		bool result{};
+		try{
 
-		bool result;
-		int index = getIndex(eventName);
-		
-		PyFunc func{pyFuncs[index], (int)args.size()};
-		result = func.call(args);
+			CompileArgs(eventName, dataRefMap, args);
+			std::ofstream outfile;
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+  			outfile << "args length = " << args.size() << "\n";
+			outfile.close();
+			
+			int index = getIndex(eventName);
+			std::string  include = pyFuncs[index];
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+			outfile << "generating pyfunc\n";
+			outfile << "for event " << eventName << " and func name " << include;
+			outfile << "\non line 113 in run event handler run event \n";
 
-		
-		
+			int size = args.size();
+			outfile << "args still working " << size ;
+			outfile.close();
+			
+			/*-----------------------------------------------
+			PyFunc not working, crashes when reading GearUp!
+			-----------------------------------------------*/
+			PyFunc func = PyFunc(include, size);
+
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+			outfile << " loaded file \n";
+			outfile.close();	
+
+			result = func.call(args);
+
+
+			if(result){
+				worker.send(eventName, *this);
+			}
+		}catch(std::exception & e){
+			std::ofstream outfile;
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+  			outfile << "ERROR: Failed to compile args cause: " << e.what();
+			outfile.close();
+			exit(1);
+		}
+
 		try{
 			if (eventName == "ReadyEvent") {
 				eventUsed[getIndex(eventName)] = false;
@@ -126,9 +147,12 @@ public:
 			outfile.close();
 			exit(1);
 		}
-		if(result){
-			worker.send(eventName, *this);
-		}
+
+
+
+
+
+
 		{
 		std::ofstream outfile;
 		outfile.open("liuHapticLog.txt", std::ios_base::app);
@@ -138,81 +162,140 @@ public:
 	}
 
 	int getIndex(std::string eventName){
-			 	std::ofstream outfile;
+		std::ofstream outfile;
 		outfile.open("liuHapticLog.txt", std::ios_base::app);
   		outfile << "\n***************\ngetIndex\n*************\n";
+		int index;
+		try{
+			index = eventNameMap.at(eventName);
+			outfile << "index retrieved: " << index << "\n";
+		}
+		catch ( std::exception & e){
+			outfile << "eventName not found in eventNameMap\nError: " << e.what();
+			outfile.close();
+			exit(1);
+		}
 		outfile.close();
-		return eventNameMap.at(eventName);
+		return index;
 	}
 
 	bool getIsUsed(std::string eventName){
 			 	std::ofstream outfile;
 		outfile.open("liuHapticLog.txt", std::ios_base::app);
-  		outfile << "\n***************\nGet is usedp\n*************\n";
+  		outfile << "\n***************\nGet is used\n*************\n";
 		outfile.close();
 		return eventUsed[getIndex(eventName)];
 	}
 
 private:
 	HapticInterface worker{};
-
-
-
-	std::vector<CPyObject> CompileArgs(std::string eventName, DataRefMap const& dataRefMap) {
+	/**
+	 * @brief Compiles arguments for pyFunctions
+	 * 
+	 * @param eventName 
+	 * @param dataRefMap 
+	 * @return void
+	 */
+	void CompileArgs(std::string eventName, DataRefMap const& dataRefMap, std::vector<PyVar> & args) {
+		CPyInstance pyInstance;
 		std::ofstream outfile;
  		outfile.open("liuHapticLog.txt", std::ios_base::app);
-  		outfile << "\n\nIn CompileArgs\n";
-		std::vector<CPyObject> result{};
-		int index;
-		try{
-			index = eventNameMap.at(eventName);
-		}
-		catch ( std::exception & e){
-			outfile.close();
-			exit(1);
-		}
+  		outfile << "\nIn CompileArgs\n";
+		outfile.close();
 
-		outfile << "index retrieved " << index <<  "\n";
-
+	
 		std::vector<RefTypePair> dataRefStrings;
+		int index = EventHandler::getIndex(eventName);
+
 		try{
 			dataRefStrings = eventTypeRefs[index];
-			outfile << "dataRefStrings retreived" << dataRefStrings.size() << "\n";
-		}
-		catch (std::exception & e){
-			std::cout << "no dataRefStrings found at index " << index << std::endl;  
-			outfile << "no more dataRefStrings\n";
-			exit(1);
-		}
-		int counter = 0;
-		try{
-			for (RefTypePair refTypePair : dataRefStrings) {
-				outfile << "ref type first " << refTypePair.first << " ref type second: " << refTypePair.second << "\n";
-				XPLMDataRef dataRef = dataRefMap.at(refTypePair.second);
-				std::string valType = refTypePair.first;
-				std::variant<int, double> value = GetValue(dataRef, valType);
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+			outfile << "dataRefStrings retreived: " << dataRefStrings.size() << "\n";
+			outfile.close();
 
-				if (valType == "float" || valType == "double") 
-				{
-					CPyObject val = PyFloat_FromDouble(std::get<double>(value));
-					result.push_back(val);
+			if (dataRefStrings.size() != 0) {
+				outfile.open("liuHapticLog.txt", std::ios_base::app);
+				outfile << "\nElements in dataRefStrings:\n";
+				for (RefTypePair x: dataRefStrings) {
+  					outfile << "First: " << x.first << ", Second: " << x.second << "\n";
 				}
-				else 
-				{
-					CPyObject val = PyLong_FromLong((long)std::get<int>(value));
-					result.push_back(val);
-				}
-				counter++;
+				outfile.close();
 			}
-			outfile <<  "size of args: "<< result.size() << "wich shuld be: "<< counter  << "\n";
 		}
 		catch (std::exception & e){
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+  			outfile << "no more dataRefStrings\n";
 			outfile.close();
 			exit(1);
 		}
+
+		int counter = 0;
+		XPLMDataRef dataRef;
+		try{
+			for (RefTypePair refTypePair : dataRefStrings) {
+				try{
+					dataRef = dataRefMap.at(refTypePair.second);
+				}
+				catch (std::exception & e) {
+					outfile.open("liuHapticLog.txt", std::ios_base::app);
+					outfile << "Failed to get data ref from map cause: " << e.what();
+					outfile.close();
+					exit(1);
+				}
+				std::string valType = refTypePair.first;
+				std::variant<int, double> value;
+				
+				try{
+					value = GetValue(dataRef, valType);
+				}catch( std::exception & e){
+					outfile.open("liuHapticLog.txt", std::ios_base::app);
+					outfile << "Failed to get value from dataref cause: " << e.what();
+					outfile.close();
+					exit(1);
+				}
+
+				outfile.open("liuHapticLog.txt", std::ios_base::app);
+				outfile << "Value type: " << valType << "\n";
+				outfile.close();
+
+				try{
+					if (valType == "float" || valType == "double") {
+						double d_val = std::get<double>(value);
+						outfile.open("liuHapticLog.txt", std::ios_base::app);
+						outfile << "Value is: " << d_val << "\n";
+						outfile.close();
+						args.push_back(PyVar{d_val});
+					}
+					else {
+						long long_val = (long)std::get<int>(value);
+						outfile.open("liuHapticLog.txt", std::ios_base::app);
+						outfile << "Value is: " << long_val << "\n";
+						outfile.close();
+						args.push_back(PyVar{long_val});
+					}
+					outfile.open("liuHapticLog.txt", std::ios_base::app);
+					outfile << "Converted " << valType << " to CPyObject\n";
+					outfile.close();
+					counter++;
+				}catch (std::exception & e) {
+					outfile.open("liuHapticLog.txt", std::ios_base::app);
+					outfile << "Failed to convert value to CPObject cause: " << e.what();
+					outfile.close();
+					exit(1);
+				}
+			}
+
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+			outfile <<  "size of args: "<< args.size() << " which should be: "<< counter  << "\n";
+			outfile.close();
+		}
+		catch (std::exception & e){
+			exit(1);
+		}
+		outfile.open("liuHapticLog.txt", std::ios_base::app);
 		outfile << "result created, returning from CompileArgs\n\n";
 		outfile.close();
-		return result;
+		return;
 	}
 	
 	std::variant<int, double> GetValue(XPLMDataRef dataRef, std::string valType)

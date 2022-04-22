@@ -67,6 +67,8 @@
 ##### PythonFiles
     Put event logic files here
 
+    the python file it self needs a main() function that returns a integer with either the value 1 or 0 weather or not the event shuld run. 
+
 ##### tactFiles
     Put .tact files here
 

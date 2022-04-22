@@ -5,42 +5,35 @@
 #include <direct.h>
 #include <vector>
 #include "includes/Python39/pyhelper.hpp"
+#include "pyVar.hpp"
 
-#ifndef DEBUG
+
 #define DEBUG
-#endif
-class PyFunc {
-	
-	//std::vector<RefTypePair> argValueTypes;
-	CPyInstance instance;
 
-	CPyObject pModule;
-	
+class PyFunc {
+	CPyInstance instance;
 	std::string fileName;
-	
 	int argc;
 public:	
 
 	PyFunc(std::string _fileName, int _argc)
 	:fileName{_fileName}, argc{_argc}
 	{
-	#ifdef DEBUG
 		std::ofstream outfile;
 		outfile.open("liuHapticLog.txt", std::ios_base::app);
-  		outfile << "\n***************\nflight loop\n*************\n";
+  		outfile << "\n***************creating Pyfunc*************\n";
 		outfile.close();
-	#endif
 	};
 
-	bool call(std::vector<CPyObject> _args) {
+	bool call(std::vector<PyVar> & _args) {
 	#ifdef DEBUG
 		std::ofstream outfile;
 
  		outfile.open("liuHapticLog.txt", std::ios_base::app);
-  		outfile << "\n***************\nIn Call\n*************\n";
-		outfile << " calling : " << fileName << "\n";
+  		outfile << "\n*************** In Func Call *************\n";
+		outfile << " calling : " << this->fileName << "\n";
 		outfile << " length of args vec = " << _args.size() << "\n";
-		outfile << " expected length by argc = " << argc << "\n";
+		outfile << " expected length by argc = " << this->argc << "\n";
 		outfile.close();
 	#endif
 		CPyObject pFunc;
@@ -53,70 +46,97 @@ public:
 			std::cerr << "error when loading pName in pyFunction.hpp" << std::endl;
 			return false;
 		}
-		pModule = PyImport_Import(pName);
+		CPyObject pModule = PyImport_Import(pName);
 
 		if (pModule) {
 			pFunc = PyObject_GetAttrString(pModule, "main");
 	
 		}
 		else {
-			std::cerr << "error when loading pModule in pyFunction.hpp" << std::endl;
+#ifdef DEBUG
+				outfile.open("liuHapticLog.txt", std::ios_base::app);
+				outfile << " Error when loading file \n";
+				outfile.close();
+				exit(1);
+#endif	
 		}
 
 		bool res{};
 		CPyObject pRes;
+		CPyObject args;
 
 		if (argc > 0) {
 			if ( pFunc && PyCallable_Check(pFunc))
 			{
-				CPyObject args = PyTuple_New(argc);
-				std::cout << "created tuple " << std::endl;
-	#ifdef DEBUG
+				args = PyTuple_New(argc);
+#ifdef DEBUG
 				outfile.open("liuHapticLog.txt", std::ios_base::app);
+				outfile << "created tuple ";
 				outfile << " before loop \n";
 				outfile.close();
-	#endif		
+#endif		
 			
 				for (int i = 0 ; i < argc ; i++) {
-
-					PyTuple_SetItem(args, i, _args[i]);
+#ifdef DEBUG
+				outfile.open("liuHapticLog.txt", std::ios_base::app);
+				outfile << "setting tuple value " << i << " to " << _args[i].get()<< "\n";
+				outfile.close();
+#endif	
+					PyTuple_SetItem(args, i, _args[i].get());
 				}
 
 
-	#ifdef DEBUG
+#ifdef DEBUG
 				outfile.open("liuHapticLog.txt", std::ios_base::app);
 				outfile << " after loop \n";
 				outfile.close();
-	#endif
+#endif
 				
-				try{
-					
-					std::cout << "after assert  before python call" << std::endl;
+				try {
+#ifdef DEBUG
+					outfile.open("liuHapticLog.txt", std::ios_base::app);
+					outfile << "after assert before python call\n";
+					outfile << "args are " << args << "\n";
+					outfile.close();
+#endif
 					pRes = PyObject_CallObject(pFunc, args);
-					std::cout << "result of python call: " <<  PyLong_AsLong(pRes) << std::endl;
-				}catch ( std::exception & e) {
-					std::cout << e.what() << std::endl;
+#ifdef DEBUG	
+					outfile.open("liuHapticLog.txt", std::ios_base::app);
+					outfile << "result of python call: " << PyLong_AsLong(pRes) << "\n";
+					outfile.close();
+#endif
 				}
-				res = PyLong_AsLong(pRes) >= 1;
+				catch ( std::exception & e) {
+					outfile.open("liuHapticLog.txt", std::ios_base::app);
+					outfile << e.what() << "\n";
+					outfile.close();
+				}
+				res = PyLong_AsLong(pRes);
 			}
 		}
 		else {
 			if ( pFunc && PyCallable_Check(pFunc))
 			{
-				std::cout << "argc is 0" << std::endl;
-
+#ifdef DEBUG
+				outfile.open("liuHapticLog.txt", std::ios_base::app);
+				outfile << "running pFunc with 0 args\n";
+				outfile.close();
+#endif
 				pRes = PyObject_CallObject(pFunc, NULL);
-				std::cout << "running pFunc" << std::endl;
-				res = PyLong_AsLong(pRes) >= 1;
-				std::cout << "converting pRes" << std::endl;
+				res = PyLong_AsLong(pRes);
+#ifdef DEBUG
+				outfile.open("liuHapticLog.txt", std::ios_base::app);
+				outfile << "converting pRes to value " << res <<  "\n";
+				outfile.close();
+#endif
 			}
 		}
-		std::cout << "returnning " << std::endl;
-	#ifdef DEBUG
+#ifdef DEBUG
 		outfile.open("liuHapticLog.txt", std::ios_base::app);
-			outfile << " Exiting Call \n";
-			outfile.close();
-	#endif
+		outfile << "returning from pyFunction\n";
+		outfile << "Exiting Call \n";
+		outfile.close();
+#endif
 		return res;
 	}
 

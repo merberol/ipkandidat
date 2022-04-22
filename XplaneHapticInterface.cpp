@@ -58,7 +58,7 @@
 #include "XPLMUtilities.h"
 
 
-static std::vector<std::string> DataRefString;
+
 static DataRefMap dataRefMap{};
 static std::vector<float> prevPos{0,0,0};
 static std::vector<float> currPos{0,0,0};
@@ -99,14 +99,28 @@ PLUGIN_API int XPluginStart(
 	//gOutputFile = fopen("liuHapticLog.txt", "w");// "w" means that we are going to write on this file
 
 #endif
-	eventHandler = new EventHandler( "se.liu.haptic_plugin");
+	eventHandler = new EventHandler("se.liu.haptic_plugin");
 
+	if (remove("liuHapticLog.txt") != 0) {
+		std::cout << "log not found" << std::endl;
+	}
+	else {
+		std::cout << "log deleted" << std::endl;
+	}
+
+	std::ofstream outfile;
 	std::cout << "eventhandler init" << std::endl;
+	outfile.open("liuHapticLog.txt", std::ios_base::app);
+  		outfile << "\n*************** Building dataRefMap *************\n";
 
 	// dataref strings required, get from config loader via EventHandlers interface
 	for (int i = 0; i < eventHandler->refPathVec.size(); i++) {
-		dataRefMap.emplace(eventHandler->refPathVec[i], XPLMFindDataRef(eventHandler->refPathVec[i].c_str()));
+		XPLMDataRef value = XPLMFindDataRef(eventHandler->refPathVec[i].c_str());
+		outfile << "Emplacing key: " << eventHandler->refPathVec[i] << "with value: " <<  value <<   "\n";
+		dataRefMap.emplace(eventHandler->refPathVec[i], value);
 	}
+	outfile << "\n*************** Building dataRefMap Done *************\n";
+	outfile.close();
 
 	std::cout << "datarefmap built" << std::endl;
 
@@ -137,7 +151,7 @@ float	HapticFlightLoopCallback(
 	#ifdef DEBUG
 					 	std::ofstream outfile;
 		outfile.open("liuHapticLog.txt", std::ios_base::app);
-  		outfile << "\n***************\nRunning event " << p.first << "\n*************\n";
+  		outfile << "\n***************\n Running event " << p.first << "\n*************\n";
 		outfile.close();
 	#endif
 				eventHandler->RunEvent(p.first, dataRefMap);
