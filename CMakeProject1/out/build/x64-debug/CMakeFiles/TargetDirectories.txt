@@ -1,5 +1,0 @@
-P:/plugg/ipkandidat/CMakeProject1/out/build/x64-debug/CMakeFiles/edit_cache.dir
-P:/plugg/ipkandidat/CMakeProject1/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
-P:/plugg/ipkandidat/CMakeProject1/out/build/x64-debug/CMakeProject1/CMakeFiles/CMakeProject1.dir
-P:/plugg/ipkandidat/CMakeProject1/out/build/x64-debug/CMakeProject1/CMakeFiles/edit_cache.dir
-P:/plugg/ipkandidat/CMakeProject1/out/build/x64-debug/CMakeProject1/CMakeFiles/rebuild_cache.dir

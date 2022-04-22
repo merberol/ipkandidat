@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src"
   ],
-  "SelectedNode": "\\TimedProcessing.sln",
+  "SelectedNode": "\\src\\ConfigLoader.hpp",
   "PreviewInSolutionExplorer": false
 }

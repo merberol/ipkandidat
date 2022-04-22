@@ -1,0 +1,174 @@
+#pragma once 
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <windows.h>
+#include "includes\bHaptics\HapticLibrary.h"
+#include "pyFunction.hpp"
+
+
+struct ConfigLoader {
+
+	ConfigLoader() {}
+
+	void SayHello() {
+		std::cout << "ConfigLoader says Hello!" << std::endl;
+	}
+
+	ResultType run() {
+		// Read from file
+		std::string fileData = "";
+		
+		// Parse file to csv
+		std::ofstream config;
+		//"EventName;TactFileName;Used;MiscAllowed;Misc";	// Excel readable header line
+
+		// Create map to return
+		ResultType data = loadData();
+		std::cout << "exiting run" << std::endl;
+		return data;
+	}
+
+	ResultType loadData() {
+		EventNameMap eventNameMap{};
+		EventUsedVec eventUsed{};
+		TactFileVec tactFiles{};
+		RefPathVector refPathVec{};
+		std::vector<std::vector<RefTypePair>> eventTypeRefs{};
+		std::vector<std::shared_ptr<PyFunc>> pyFuncs{};
+		
+		TactFileNamesVec tactFileNames{};
+		PyFileNameVec pyFileNames{};
+
+		processConfig(
+		eventNameMap,
+		eventUsed,
+		tactFileNames,
+		eventTypeRefs,
+		pyFileNames,
+		refPathVec
+		);
+
+		if ( eventUsed.size() != tactFileNames.size() || tactFileNames.size() != pyFileNames.size() || pyFileNames.size() != eventTypeRefs.size() )
+		{
+			std::ofstream outfile;
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+  			outfile << "\n*************** WARNING ARRAY FILES SIZES DONT MATCH *************\n";
+			outfile.close();
+		}
+		// read tact files into an array
+		for (std::string fileName : tactFileNames) {
+			std::string file = LoadTactFile(fileName);
+			std::cout << fileName << " is file name" << std::endl;
+			tactFiles.push_back(file);
+		}
+
+
+		ResultType result{eventNameMap, eventUsed, tactFiles, refPathVec, eventTypeRefs, pyFileNames};
+		std::cout << "returning datamap" << std::endl;
+		return result;
+	}
+	
+	std::string LoadTactFile(std::string fileName = "test.tact") {
+		std::cout << "trying to open" << fileName << std::endl;
+		// test.tact file should be in the same folder
+		std::ifstream fileIn("Resources\\plugins\\LiuHaptics\\tactFiles\\" + fileName);
+		if (fileIn.is_open()) {
+			std::cout << fileName << " is open" << std::endl;
+		}
+		else {
+			std::cout << ".tact file failed to open" << std::endl;
+		}
+		char* inputString = new char[100000];
+		if (fileIn.good()) {
+			std::cout << "file is good " << std::endl;
+			while(!fileIn.eof()){
+				fileIn.getline(inputString, 100000);
+			}
+			fileIn.close();
+			std::cout << "file is read" << std::endl;
+			return inputString;
+		} else {
+			if(fileIn.is_open())
+				fileIn.close();
+			std::cout << "Failed to register the feedback file." << std::endl;
+			return "";
+		}
+	}
+
+	void processConfig(
+		std::unordered_map<std::string, int> &eventNameMap,
+		std::vector<bool> &eventUsed,
+		std::vector<std::string> &tactFileNames,
+		std::vector<std::vector<RefTypePair>> &eventTypeRefs,
+		std::vector<std::string> &pyFileNames,
+		std::vector<std::string> &refVec
+		){
+		std::fstream fileIn;
+		fileIn.open("Resources\\plugins\\LiuHaptics\\ConfigCSV.csv", std::fstream::in);
+		if (fileIn.is_open()) {
+			std::cout << "file is open" << std::endl;
+		}
+		std::string word{};
+		std::vector<std::string> row{};
+		bool first{ true };
+		int index = 0;
+		while (!fileIn.eof())
+		{
+			row.clear();
+			std::string line{};
+			// skip headers in CSV file 
+			if (first) {
+				std::getline(fileIn, line, '\n');
+				line = "";
+				first = !first;
+			}
+			std::getline(fileIn, line, '\n');
+			std::stringstream ss;
+			ss << line;
+
+			while (std::getline(ss, word, ';') ) {
+				row.push_back(word);
+			}
+			if (row.empty())
+			{
+				break;
+			}
+
+			// register event with Player
+			std::vector<RefTypePair> eventRefs{};
+			std::string eventName = row[0];
+			std::string tactfilename = row[1];
+			bool used = stoi(row[2]);
+			std::string pyFileName = row[3];
+			pyFileNames.push_back(pyFileName);
+			int numDataPoints = stoi(row[4]);
+			std::ofstream outfile;
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+  			outfile << "\n*************** Num datapoints Config loader row 149 = " << numDataPoints << " *************\n";
+			
+			if (numDataPoints > 0) {
+				for ( int i = 0; i < numDataPoints * 2; i+=2){
+					int idx = i+5;
+					outfile << "\n type : " << row[idx];
+					outfile << "\n refstring : " << row[idx+1];
+					RefTypePair tmp{row[idx], row[idx+1]};
+					eventRefs.push_back(tmp);
+				}
+			}
+			outfile.close();
+			eventTypeRefs.push_back(eventRefs);
+			tactFileNames.push_back(tactfilename); // tact file to event 
+
+			// create event map
+			
+			eventUsed.push_back(used);
+			eventNameMap.emplace(eventName, index);
+			index++;
+		}
+		fileIn.close();
+		std::cout << "closed main data file" << std::endl;
+	}
+
+};
