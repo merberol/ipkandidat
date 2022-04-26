@@ -1,23 +1,8 @@
-// Downloaded from https://developer.x-plane.com/code-sample/timedprocessing/
+
 // cl /EHsc /std:c++17 /Fe:"C:\X-Plane 11\Resources\plugins\LiuHaptics\win.xpl" /I includes\Xplane\CHeaders\XPLM /I includes\Python39 /I includes\bHaptics /I src XplaneHapticInterface.cpp /LD /INCREMENTAL:NO /link /LIBPATH:"C:\XplHaptInterface\libs"
 #pragma comment(lib,"python39_d.lib")
 #pragma comment(lib,"Xplane\\XPLM_64.lib")
 #pragma comment(lib,"bHapticSDK\\bin\\win64\\haptic_library.lib")
-
-/*
- * TimedProcessing.c
- * 
- * This example plugin demonstrates how to use the timed processing callbacks
- * to continuously record sim data to disk.
- * 
- * This technique can be used to record data to disk or to the network.  Unlike
- * UDP data output, we can increase our frequency to capture data every single
- * sim frame.  (This example records once per second.)
- * 
- * Use the timed processing APIs to do any periodic or asynchronous action in
- * your plugin.
- * 
- */
 
 #if APL
 #if defined(__MACH__)
@@ -58,13 +43,8 @@
 #include "XPLMUtilities.h"
 
 
-
 static DataRefMap dataRefMap{};
-static std::vector<float> prevPos{0,0,0};
-static std::vector<float> currPos{0,0,0};
-static bool highAlt = false;
-
-
+static std::unordered_map<std::string, double> dataMap;
 
 EventHandler* eventHandler;
 /* File to write data to. */
@@ -97,8 +77,8 @@ PLUGIN_API int XPluginStart(
 	strcpy_s(outDesc, 55, "A plugin for testing a haptic vest with the flightsim.");
 #ifdef DEBUG
 	//gOutputFile = fopen("liuHapticLog.txt", "w");// "w" means that we are going to write on this file
-
 #endif
+
 	eventHandler = new EventHandler("se.liu.haptic_plugin");
 
 	if (remove("liuHapticLog.txt") != 0) {
@@ -116,7 +96,7 @@ PLUGIN_API int XPluginStart(
 	// dataref strings required, get from config loader via EventHandlers interface
 	for (int i = 0; i < eventHandler->refPathVec.size(); i++) {
 		XPLMDataRef value = XPLMFindDataRef(eventHandler->refPathVec[i].c_str());
-		outfile << "Emplacing key: " << eventHandler->refPathVec[i] << "with value: " <<  value <<   "\n";
+		outfile << "Emplacing key: " << eventHandler->refPathVec[i] << " with value: " <<  value <<   "\n";
 		dataRefMap.emplace(eventHandler->refPathVec[i], value);
 	}
 	outfile << "\n*************** Building dataRefMap Done *************\n";
@@ -133,6 +113,87 @@ PLUGIN_API int XPluginStart(
 	return 1;
 }
 
+std::unordered_map<std::string, double> getData (std::string eventName) {
+	std::vector<RefTypePair> dataRefStrings = eventHandler->eventTypeRefs[eventHandler->getIndex(eventName)];
+	std::unordered_map<std::string, double> data{};
+	int counter = 0;
+	for (RefTypePair refTypePair : dataRefStrings) {
+		{
+			std::ofstream outfile;
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+			outfile << "Entering loop\n";
+			outfile.close();
+		}
+		XPLMDataRef dataRef = dataRefMap.at(refTypePair.second);
+		std::string valType = refTypePair.first;
+
+
+		{
+			std::ofstream outfile;
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+			outfile << "values defined\n";
+			outfile.close();
+		}
+		
+		if (valType == "float" ) {
+			float d_val = XPLMGetDataf(dataRef);
+			std::cout << d_val  << ", "  ;
+			std::ofstream outfile;
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+			outfile << "Value is: " << d_val << "\n";
+			outfile.close();
+			{
+				std::ofstream outfile;
+				outfile.open("liuHapticLog.txt", std::ios_base::app);
+				outfile << "adding data to pyObjetcs at index: " << counter << "\n";
+				outfile.close();
+			}
+			
+			data.emplace(refTypePair.second, d_val);
+		}
+		else if (valType == "double") {
+			double d_val = XPLMGetDatad(dataRef);
+			std::cout << d_val  << ", "  ;
+			std::ofstream outfile;
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+			outfile << "Value is: " << d_val << "\n";
+			outfile.close();
+			{
+				std::ofstream outfile;
+				outfile.open("liuHapticLog.txt", std::ios_base::app);
+				outfile << "adding data to pyObjetcs at index: " << counter << "\n";
+				outfile.close();
+			}
+			
+			data.emplace(refTypePair.second, d_val);
+			
+			//PyTuple_SetItem(Fargs, counter, pyObjects[counter]);
+		}
+		else {
+			long long_val = XPLMGetDatai(dataRef);
+			std::cout <<  long_val << ", " ;
+			std::ofstream outfile;
+			outfile.open("liuHapticLog.txt", std::ios_base::app);
+			outfile << "Value is: " << long_val << "\n";
+			outfile.close();
+			{
+				std::ofstream outfile;
+				outfile.open("liuHapticLog.txt", std::ios_base::app);
+				outfile << "adding data to pyObjetcs at index: " << counter << "\n";
+				outfile.close();
+			}
+			data.emplace(refTypePair.second,long_val);
+		}
+		std::ofstream outfile;
+		outfile.open("liuHapticLog.txt", std::ios_base::app);
+		outfile << "Converted " << valType << " to CPyObject\n";
+		outfile.close();
+		counter++;
+	}
+	counter = 0;
+	return data;
+}
+
 float	HapticFlightLoopCallback(
                                    float                inElapsedSinceLastCall,    
                                    float                inElapsedTimeSinceLastFlightLoop,    
@@ -147,6 +208,13 @@ float	HapticFlightLoopCallback(
 
 		// p is a pair of Event Name and a integer representing the index of the event.
 		for (std::pair<std::string, int> p : eventHandler->eventNameMap) {
+	#ifdef DEBUG
+		std::ofstream outfile;
+		outfile.open("liuHapticLog.txt", std::ios_base::app);
+  		outfile << "\n***************\n testing event " << p.first <<  " with value " << p.second << "\n*************\n";
+		outfile.close();
+	#endif
+
 			if (eventHandler->getIsUsed(p.first)) {
 	#ifdef DEBUG
 					 	std::ofstream outfile;
@@ -154,7 +222,8 @@ float	HapticFlightLoopCallback(
   		outfile << "\n***************\n Running event " << p.first << "\n*************\n";
 		outfile.close();
 	#endif
-				eventHandler->RunEvent(p.first, dataRefMap);
+				dataMap = getData(p.first);
+				eventHandler->RunEvent(p.first, dataMap);
 			}
 		}
 	}
@@ -189,6 +258,8 @@ PLUGIN_API void XPluginReceiveMessage(
 	int				inMessage,
 	void* inParam)
 {}
+
+
 
 #if APL && __MACH__
 #include <Carbon/Carbon.h>

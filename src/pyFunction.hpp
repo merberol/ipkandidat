@@ -11,6 +11,7 @@
 #define DEBUG
 
 class PyFunc {
+	/*
 	CPyInstance instance;
 	std::string fileName;
 	int argc;
@@ -139,6 +140,6 @@ public:
 #endif
 		return res;
 	}
-
+*/
 
 };
