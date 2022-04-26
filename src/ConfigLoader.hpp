@@ -61,8 +61,6 @@ struct ConfigLoader {
 			tactFiles.push_back(file);
 		}
 
-
-		ResultType result{eventNameMap, eventUsed, tactFiles, refPathVec, eventTypeRefs, pyFileNames};
 		std::cout << "returning datamap" << std::endl;
 		return;
 	}
@@ -142,37 +140,36 @@ struct ConfigLoader {
 			std::string pyFileName = row[3];
 			pyFileNames.push_back(pyFileName);
 			int numDataPoints = stoi(row[4]);
-			std::ofstream outfile;
-			outfile.open("liuHapticLog.txt", std::ios_base::app);
-  			outfile << "\n*************** Num datapoints Config loader row 149 = " << numDataPoints << " *************\n";
+			
+			std::cout << "\nprocessConfig for " << eventName << " with " << numDataPoints << " data points" << std::endl;
 			
 			if (numDataPoints > 0) {
 				for ( int i = 0; i < numDataPoints * 2; i+=2){
 					int idx = i+5;
-					outfile << "\n type : " << row[idx];
-					outfile << "\n refstring : " << row[idx+1];
+					std::cout << "type : " << row[idx] << std::endl;
+					std::cout << "refstring : " << row[idx+1] << std::endl;
 					refVec.push_back(row[idx+1]);
 					RefTypePair tmp{row[idx], row[idx+1]};
 					eventRefs.push_back(tmp);
 				}
 			}
-			outfile.close();
 			eventTypeRefs.push_back(eventRefs);
-			tactFileNames.push_back(tactfilename); // tact file to event 
-
-			
-
+			std::cout << "pushing " << tactfilename << " to tactFiles" << std::endl;
+			tactFileNames.push_back(tactfilename); // tact file to event
+			std::cout << "pushing " << used << " to eventUsed" << std::endl;
 			eventUsed.push_back(used);
+			std::cout << "emplacing " << eventName << " and " << index << " to eventNameMap" << std::endl;
 			eventNameMap.emplace(eventName, index);
 			index++;
 		}
+
 		fileIn.close();
 		// clean refVec
 		std::sort(begin(refVec), end(refVec));
 		auto c_itr = std::unique(begin(refVec), end(refVec));
 		refVec.erase(c_itr, refVec.end());
 
-		std::cout << "closed main data file" << std::endl;
+		std::cout << "\nclosed main data file\n" << std::endl;
 	}
 
 };

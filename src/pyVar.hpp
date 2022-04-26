@@ -12,7 +12,7 @@
 #define DEBUG
 #endif
 class PyVar{
-	
+	/*
 
 	CPyInstance instance;
 
@@ -51,6 +51,6 @@ public:
 #endif
 		return var;
 	}
-
+	*/
 
 };
