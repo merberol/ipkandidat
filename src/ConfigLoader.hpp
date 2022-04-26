@@ -11,29 +11,11 @@
 
 struct ConfigLoader {
 
-	ConfigLoader() {}
-
-	void SayHello() {
-		std::cout << "ConfigLoader says Hello!" << std::endl;
+	ConfigLoader() {
+		std::cout << "### Creating ConfigLoader ###" << std::endl;
 	}
 
 	void run(EventNameMap & eventNameMap, EventUsedVec & eventUsed,  TactFileVec & tactFiles, RefPathVector & refPathVec,
-			std::vector<std::vector<RefTypePair>> & eventTypeRefs,  PyFileNameVec & pyFileNames ) {
-		// Read from file
-		std::string fileData = "";
-		
-		// Parse file to csv
-		std::ofstream config;
-		//"EventName;TactFileName;Used;MiscAllowed;Misc";	// Excel readable header line
-
-		// Create map to return
-		loadData(eventNameMap, eventUsed,  tactFiles, refPathVec,
-			eventTypeRefs,  pyFileNames );
-		std::cout << "exiting run" << std::endl;
-		return ;
-	}
-
-	void loadData(EventNameMap & eventNameMap, EventUsedVec & eventUsed,  TactFileVec & tactFiles, RefPathVector & refPathVec,
 			std::vector<std::vector<RefTypePair>> & eventTypeRefs,  PyFileNameVec & pyFileNames ) {
 
 		TactFileNamesVec tactFileNames{};
@@ -51,21 +33,21 @@ struct ConfigLoader {
 		{
 			std::ofstream outfile;
 			outfile.open("liuHapticLog.txt", std::ios_base::app);
-  			outfile << "\n*************** WARNING ARRAY FILES SIZES DONT MATCH *************\n";
+  			outfile << "Vector sizes don't match!";
+			outfile << eventUsed.size() << " / " << tactFileNames.size() << " / " << pyFileNames.size() << " / " << eventTypeRefs.size();
 			outfile.close();
+			exit(1);
 		}
-		// read tact files into an array
+
 		for (std::string fileName : tactFileNames) {
-			std::string file = LoadTactFile(fileName);
-			std::cout << fileName << " is file name" << std::endl;
+			std::string file = loadTactFile(fileName);
 			tactFiles.push_back(file);
 		}
 
-		std::cout << "returning datamap" << std::endl;
 		return;
 	}
 	
-	std::string LoadTactFile(std::string fileName = "test.tact") {
+	std::string loadTactFile(std::string fileName = "test.tact") {
 		std::cout << "trying to open" << fileName << std::endl;
 		// test.tact file should be in the same folder
 		std::ifstream fileIn("Resources\\plugins\\LiuHaptics\\tactFiles\\" + fileName);
@@ -162,14 +144,12 @@ struct ConfigLoader {
 			eventNameMap.emplace(eventName, index);
 			index++;
 		}
-
 		fileIn.close();
-		// clean refVec
+
+		// Remove duplicates from refVec.
 		std::sort(begin(refVec), end(refVec));
 		auto c_itr = std::unique(begin(refVec), end(refVec));
 		refVec.erase(c_itr, refVec.end());
-
-		std::cout << "\nclosed main data file\n" << std::endl;
 	}
 
 };

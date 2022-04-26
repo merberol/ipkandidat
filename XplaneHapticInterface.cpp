@@ -4,12 +4,6 @@
 #pragma comment(lib,"Xplane\\XPLM_64.lib")
 #pragma comment(lib,"bHapticSDK\\bin\\win64\\haptic_library.lib")
 
-#if APL
-#if defined(__MACH__)
-#include <Carbon/Carbon.h>
-#endif
-#endif
-
 //#define WINVER 0x0601
 //#define _WIN32_WINNT 0x0601
 #define _WIN32_WINDOWS 0x0601
@@ -25,7 +19,6 @@
 #define _VC80_UPGRADE 0x0600
 #define _WINDLL
 #define _MBCS
-
 
 #include <stdio.h>
 #include <string.h>
@@ -45,20 +38,7 @@
 
 static DataRefMap dataRefMap{};
 static std::unordered_map<std::string, double> dataMap;
-
 EventHandler* eventHandler;
-/* File to write data to. */
-FILE*	gOutputFile;
-
-/* Data refs we will record. */
-static XPLMDataRef		gPlaneLat;
-static XPLMDataRef		gPlaneLon;
-static XPLMDataRef		gPlaneEl;
-
-#if APL && __MACH__
-static int ConvertPath(const char * inPath, char * outPath, int outPathMaxLen);
-#endif
-
 
 static float	HapticFlightLoopCallback(
                                    float                inElapsedSinceLastCall,    
@@ -75,23 +55,19 @@ PLUGIN_API int XPluginStart(
 	strcpy_s(outName, 18, "LIU Haptic Plugin");
 	strcpy_s(outSig, 18, "liu.haptic_plugin");
 	strcpy_s(outDesc, 55, "A plugin for testing a haptic vest with the flightsim.");
-#ifdef DEBUG
-	//gOutputFile = fopen("liuHapticLog.txt", "w");// "w" means that we are going to write on this file
-#endif
 
 	eventHandler = new EventHandler("se.liu.haptic_plugin");
 
 	if (remove("liuHapticLog.txt") != 0) {
-		std::cout << "log not found" << std::endl;
+		std::cout << "Log not found: Unable to delete." << std::endl;
 	}
 	else {
-		std::cout << "log deleted" << std::endl;
+		std::cout << "Log found: Deleted." << std::endl;
 	}
 
 	std::ofstream outfile;
-	std::cout << "eventhandler init" << std::endl;
 	outfile.open("liuHapticLog.txt", std::ios_base::app);
-  		outfile << "\n*************** Building dataRefMap *************\n";
+  	outfile << "\n***************\nBuilding dataRefMap\n***************\n";
 
 	// dataref strings required, get from config loader via EventHandlers interface
 	for (int i = 0; i < eventHandler->refPathVec.size(); i++) {
@@ -99,131 +75,67 @@ PLUGIN_API int XPluginStart(
 		outfile << "Emplacing key: " << eventHandler->refPathVec[i] << " with value: " <<  value <<   "\n";
 		dataRefMap.emplace(eventHandler->refPathVec[i], value);
 	}
-	outfile << "\n*************** Building dataRefMap Done *************\n";
 	outfile.close();
-
-	std::cout << "datarefmap built" << std::endl;
 
 	XPLMRegisterFlightLoopCallback(
 		HapticFlightLoopCallback,	/* Callback */
 		1.0,						/* Interval */
 		NULL);						/* refcon not used. */
-	// eventHandler->ReadyEvent();
-	//fprintf(gOutputFile, "xplugin started\n");
+
 	return 1;
 }
 
-std::unordered_map<std::string, double> getData (std::string eventName) {
+std::unordered_map<std::string, double> getData(std::string eventName) {
 	std::vector<RefTypePair> dataRefStrings = eventHandler->eventTypeRefs[eventHandler->getIndex(eventName)];
 	std::unordered_map<std::string, double> data{};
 	int counter = 0;
+
 	for (RefTypePair refTypePair : dataRefStrings) {
-		{
-			std::ofstream outfile;
-			outfile.open("liuHapticLog.txt", std::ios_base::app);
-			outfile << "Entering loop\n";
-			outfile.close();
-		}
 		XPLMDataRef dataRef = dataRefMap.at(refTypePair.second);
 		std::string valType = refTypePair.first;
 
-
-		{
-			std::ofstream outfile;
-			outfile.open("liuHapticLog.txt", std::ios_base::app);
-			outfile << "values defined\n";
-			outfile.close();
+		if (valType == "int") {
+			long dataValue = XPLMGetDatai(dataRef);
+			std::cout << valType << " " << refTypePair.first << ": " << dataValue << std::endl;
+			data.emplace(refTypePair.second, dataValue);
 		}
-		
-		if (valType == "float" ) {
-			float d_val = XPLMGetDataf(dataRef);
-			std::cout << d_val  << ", "  ;
-			std::ofstream outfile;
-			outfile.open("liuHapticLog.txt", std::ios_base::app);
-			outfile << "Value is: " << d_val << "\n";
-			outfile.close();
-			{
-				std::ofstream outfile;
-				outfile.open("liuHapticLog.txt", std::ios_base::app);
-				outfile << "adding data to pyObjetcs at index: " << counter << "\n";
-				outfile.close();
-			}
-			
-			data.emplace(refTypePair.second, d_val);
+		else if (valType == "float") {
+			float dataValue = XPLMGetDataf(dataRef);
+			std::cout << valType << " " << refTypePair.first << ": " << dataValue << std::endl;
+			data.emplace(refTypePair.second, dataValue);
 		}
 		else if (valType == "double") {
-			double d_val = XPLMGetDatad(dataRef);
-			std::cout << d_val  << ", "  ;
-			std::ofstream outfile;
-			outfile.open("liuHapticLog.txt", std::ios_base::app);
-			outfile << "Value is: " << d_val << "\n";
-			outfile.close();
-			{
-				std::ofstream outfile;
-				outfile.open("liuHapticLog.txt", std::ios_base::app);
-				outfile << "adding data to pyObjetcs at index: " << counter << "\n";
-				outfile.close();
-			}
-			
-			data.emplace(refTypePair.second, d_val);
-			
-			//PyTuple_SetItem(Fargs, counter, pyObjects[counter]);
+			double dataValue = XPLMGetDatad(dataRef);
+			std::cout << valType << " " << refTypePair.first << ": " << dataValue << std::endl;
+			data.emplace(refTypePair.second, dataValue);
 		}
 		else {
-			long long_val = XPLMGetDatai(dataRef);
-			std::cout <<  long_val << ", " ;
 			std::ofstream outfile;
 			outfile.open("liuHapticLog.txt", std::ios_base::app);
-			outfile << "Value is: " << long_val << "\n";
+			outfile << "Unusable value type in config: " << valType << "\n";
+			outfile << "Use only int, float or double.\n";
 			outfile.close();
-			{
-				std::ofstream outfile;
-				outfile.open("liuHapticLog.txt", std::ios_base::app);
-				outfile << "adding data to pyObjetcs at index: " << counter << "\n";
-				outfile.close();
-			}
-			data.emplace(refTypePair.second,long_val);
+			exit(1);
 		}
-		std::ofstream outfile;
-		outfile.open("liuHapticLog.txt", std::ios_base::app);
-		outfile << "Converted " << valType << " to CPyObject\n";
-		outfile.close();
 		counter++;
 	}
+
+	std::cout << std::endl;
 	counter = 0;
 	return data;
 }
 
 float	HapticFlightLoopCallback(
-                                   float                inElapsedSinceLastCall,    
-                                   float                inElapsedTimeSinceLastFlightLoop,    
-                                   int                  inCounter,    
+                                   float                inElapsedSinceLastCall,
+                                   float                inElapsedTimeSinceLastFlightLoop,
+                                   int                  inCounter,
                                    void *               inRefcon)
 {
-	 	std::ofstream outfile;
-		outfile.open("liuHapticLog.txt", std::ios_base::app);
-  		outfile << "\n***************\nflight loop\n*************\n";
-		outfile.close();
 	try {
-
-		// p is a pair of Event Name and a integer representing the index of the event.
-		for (std::pair<std::string, int> p : eventHandler->eventNameMap) {
-	#ifdef DEBUG
-		std::ofstream outfile;
-		outfile.open("liuHapticLog.txt", std::ios_base::app);
-  		outfile << "\n***************\n testing event " << p.first <<  " with value " << p.second << "\n*************\n";
-		outfile.close();
-	#endif
-
+		for (EventIndexPair p : eventHandler->eventNameMap) {
 			if (eventHandler->getIsUsed(p.first)) {
-	#ifdef DEBUG
-					 	std::ofstream outfile;
-		outfile.open("liuHapticLog.txt", std::ios_base::app);
-  		outfile << "\n***************\n Running event " << p.first << "\n*************\n";
-		outfile.close();
-	#endif
 				dataMap = getData(p.first);
-				eventHandler->RunEvent(p.first, dataMap);
+				eventHandler->runEvent(p.first, dataMap);
 			}
 		}
 	}
@@ -232,15 +144,13 @@ float	HapticFlightLoopCallback(
 		exit(1);
 	}
 
-	/* Return 1.0 to indicate that we want to be called again in 1 second. */
+	// Return 1.0 to indicate that we want this function to be called again in 1 second.
 	return 1.0;
-
 }
 
 PLUGIN_API void	XPluginStop(void)
 {
-	// Call destructor for allocated resources
-	//fclose(gOutputFile);
+	// Destroy allocated resources.
 	delete eventHandler;
 	eventHandler = nullptr;
 	XPLMUnregisterFlightLoopCallback(HapticFlightLoopCallback, NULL);
@@ -248,34 +158,10 @@ PLUGIN_API void	XPluginStop(void)
 
 PLUGIN_API void XPluginDisable(void) {}
 
-PLUGIN_API int XPluginEnable(void)
-{
-	return 1;
-}
+PLUGIN_API int XPluginEnable(void) { return 1; }
 
 PLUGIN_API void XPluginReceiveMessage(
 	XPLMPluginID	inFromWho,
 	int				inMessage,
 	void* inParam)
 {}
-
-
-
-#if APL && __MACH__
-#include <Carbon/Carbon.h>
-int ConvertPath(const char * inPath, char * outPath, int outPathMaxLen)
-{
-	CFStringRef inStr = CFStringCreateWithCString(kCFAllocatorDefault, inPath ,kCFStringEncodingMacRoman);
-	if (inStr == NULL)
-		return -1;
-	CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, inStr, kCFURLHFSPathStyle,0);
-	CFStringRef outStr = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
-	if (!CFStringGetCString(outStr, outPath, outPathMaxLen, kCFURLPOSIXPathStyle))
-		return -1;
-	CFRelease(outStr);
-	CFRelease(url);
-	CFRelease(inStr); 	
-	return 0;
-}
-#endif
-

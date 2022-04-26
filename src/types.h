@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include <utility>
 #include <vector>
 #include <unordered_map>
@@ -22,7 +20,8 @@ using RefTypePair = std::pair<std::string, std::string>;
 using EventToRefsMap = std::unordered_map<std::string, std::vector<RefTypePair>>;
 using EventToFileVec = std::vector<std::string>;
 
-using EventNameMap = std::unordered_map < std::string, int>;
+using EventNameMap = std::unordered_map <std::string, int>;
+using EventIndexPair = std::pair<std::string, int>;
 using EventUsedVec = std::vector<bool>;
 using TactFileNamesVec = std::vector<std::string>;
 using TactFileVec = std::vector<std::string>;
