@@ -45,7 +45,6 @@ public:
 	EventHandler(std::string id) 
 		:_id{ id }
 	{
-
 		char playerPath[200];
 		int esize = 2;
 		bool res = TryGetExePath(playerPath, esize);

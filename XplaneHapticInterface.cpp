@@ -20,7 +20,6 @@
 #define _WINDLL
 #define _MBCS
 
-
 #include <stdio.h>
 #include <string.h>
 #include <string>
@@ -154,24 +153,29 @@ float	HapticFlightLoopCallback(
                                    void *               inRefcon)
 {
 	std::stringstream output{};
+#ifdef DEBUG
 	output << "****************************************************************************************************\n"
 		<< "Fligh Loop start";
 	StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
+#endif
 	try {
 		for (EventIndexPair p : eventHandler->eventNameMap) {
+#ifdef DEBUG
 			output.clear();
 			output << "****************************************************************************\n"
 				<< "Event Loop Start";
 			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
+#endif
 			if (eventHandler->getIsUsed(p.first)) {
 				dataMap = getData(p.first);
 				eventHandler->runEvent(p.first, dataMap);
 			}
-
+#ifdef DEBUG
 			output.clear();
 			output << "Event Loop End"
 				<< "\n****************************************************************************";
 			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
+#endif
 		}
 	}
 	catch (std::exception & e) {
@@ -183,11 +187,12 @@ float	HapticFlightLoopCallback(
 		StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 		exit(1);
 	}
-
+#ifdef DEBUG
 	output.clear();
 	output << "Fligh Loop end"
 		<< "****************************************************************************************************\n";
 	StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
+#endif
 	// Return 1.0 to indicate that we want this function to be called again in 1 second.
 	return 1.0;
 }

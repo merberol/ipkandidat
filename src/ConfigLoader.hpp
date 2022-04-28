@@ -144,6 +144,7 @@ struct ConfigLoader {
 			eventTypeRefs.push_back(eventRefs);
 			tactFileNames.push_back(tactfilename); // tact file to event
 			eventUsed.push_back(used);
+			std::cout << "emplacing " << eventName << " and " << index << " to eventNameMap" << std::endl;
 			eventNameMap.emplace(eventName, index);
 			index++;
 		}
