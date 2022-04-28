@@ -1,20 +1,33 @@
+#pragma once
+
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <cstdarg>
+#include <ctime>
 
 class StreamLogger {
     std::ofstream outfile;
 public:
-    void slog (int numArgs, ...) {
-        va_list argList;
-        outfile.open("liuHapticLog.txt", std::ios_base::app);
-        va_start(argList, numArgs);
-        for (int i = 0; i < numArgs; i++) {
-            outfile << va_arg(argList, int);
-        }
-        outfile << std::endl;
-		outfile.close();
-        va_end(argList);
+  
+   static void log(std::string const& context, std::string const& fileName, std::string const& message){
+        std::ofstream ofile;
+        ofile.open(fileName, std::ios_base::app);
+        std::time_t result = std::time(nullptr);
+        ofile << "****************************************\n" 
+            << context << " | "
+            << std::asctime(std::localtime(&result))
+            << message 
+            << "\n****************************************" << std::endl;
+        
+        ofile.close();
+        return;
+
+    }
+
+    static void log(std::string const& context, std::string const& fileName, std::stringstream const& message){
+        StreamLogger::log(context, fileName, message.str());
         return;
     }
+    
 };

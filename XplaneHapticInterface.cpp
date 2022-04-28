@@ -20,6 +20,7 @@
 #define _WINDLL
 #define _MBCS
 
+
 #include <stdio.h>
 #include <string.h>
 #include <string>
@@ -31,6 +32,7 @@
 #include <unordered_map>
 #include <memory>
 #include "src/EventHandler.hpp"
+#include "src/Logger.hpp"
 #include "XPLMProcessing.h"
 #include "XPLMDataAccess.h"
 #include "XPLMUtilities.h"
@@ -58,25 +60,26 @@ PLUGIN_API int XPluginStart(
 
 	eventHandler = new EventHandler("se.liu.haptic_plugin");
 
-	if (remove("liuHapticLog.txt") != 0) {
-		std::cout << "Log not found: Unable to delete." << std::endl;
-	}
-	else {
-		std::cout << "Log found: Deleted." << std::endl;
-	}
+	remove("liuHapticLog.txt");
+	
 
-	std::ofstream outfile;
-	outfile.open("liuHapticLog.txt", std::ios_base::app);
-  	outfile << "\n***************\nBuilding dataRefMap\n***************\n";
-
+#ifdef DEBUG
+	StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt",  "\n***************\nBuilding dataRefMap\n***************\n");
+#endif
 	// dataref strings required, get from config loader via EventHandlers interface
 	for (int i = 0; i < eventHandler->refPathVec.size(); i++) {
 		XPLMDataRef value = XPLMFindDataRef(eventHandler->refPathVec[i].c_str());
-		outfile << "Emplacing key: " << eventHandler->refPathVec[i] << " with value: " <<  value <<   "\n";
+
+#ifdef DEBUG
+		std::stringstream output{};
+		output << "Emplacing key: " << eventHandler->refPathVec[i] << " with value: " << value;
+		StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
+#endif
 		dataRefMap.emplace(eventHandler->refPathVec[i], value);
 	}
-	outfile.close();
-
+#ifdef DEBUG
+	StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt",  "Done\n***************\n");
+#endif
 	XPLMRegisterFlightLoopCallback(
 		HapticFlightLoopCallback,	/* Callback */
 		1.0,						/* Interval */
@@ -85,6 +88,14 @@ PLUGIN_API int XPluginStart(
 	return 1;
 }
 
+/**
+ * @brief Retrives the data map for the current event.
+ * 
+ * To exted this method add another valtype case as a elseif block and use the apropriate XPLMGetData method and convert the result to a float.
+ * 
+ * @param eventName 
+ * @return std::unordered_map<std::string, double> 
+ */
 std::unordered_map<std::string, double> getData(std::string eventName) {
 	std::vector<RefTypePair> dataRefStrings = eventHandler->eventTypeRefs[eventHandler->getIndex(eventName)];
 	std::unordered_map<std::string, double> data{};
@@ -96,25 +107,36 @@ std::unordered_map<std::string, double> getData(std::string eventName) {
 
 		if (valType == "int") {
 			long dataValue = XPLMGetDatai(dataRef);
-			std::cout << valType << " " << refTypePair.first << ": " << dataValue << std::endl;
+#ifdef DEBUG
+			std::stringstream output{};
+			output << valType << " " << refTypePair.first << ": " << dataValue;
+			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
+#endif
 			data.emplace(refTypePair.second, dataValue);
 		}
 		else if (valType == "float") {
 			float dataValue = XPLMGetDataf(dataRef);
-			std::cout << valType << " " << refTypePair.first << ": " << dataValue << std::endl;
+#ifdef DEBUG
+			std::stringstream output{};
+			output << valType << " " << refTypePair.first << ": " << dataValue;
+			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
+#endif
 			data.emplace(refTypePair.second, dataValue);
 		}
 		else if (valType == "double") {
 			double dataValue = XPLMGetDatad(dataRef);
-			std::cout << valType << " " << refTypePair.first << ": " << dataValue << std::endl;
+#ifdef DEBUG
+			std::stringstream output{};
+			output << valType << " " << refTypePair.first << ": " << dataValue;
+			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
+#endif
 			data.emplace(refTypePair.second, dataValue);
 		}
 		else {
-			std::ofstream outfile;
-			outfile.open("liuHapticLog.txt", std::ios_base::app);
-			outfile << "Unusable value type in config: " << valType << "\n";
-			outfile << "Use only int, float or double.\n";
-			outfile.close();
+			std::stringstream output{};
+			output << "Unusable value type in config: " << valType << "\n";
+			output << "Use only int, float or double.";
+			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 			exit(1);
 		}
 		counter++;
@@ -131,19 +153,41 @@ float	HapticFlightLoopCallback(
                                    int                  inCounter,
                                    void *               inRefcon)
 {
+	std::stringstream output{};
+	output << "****************************************************************************************************\n"
+		<< "Fligh Loop start";
+	StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 	try {
 		for (EventIndexPair p : eventHandler->eventNameMap) {
+			output.clear();
+			output << "****************************************************************************\n"
+				<< "Event Loop Start";
+			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 			if (eventHandler->getIsUsed(p.first)) {
 				dataMap = getData(p.first);
 				eventHandler->runEvent(p.first, dataMap);
 			}
+
+			output.clear();
+			output << "Event Loop End"
+				<< "\n****************************************************************************";
+			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 		}
 	}
 	catch (std::exception & e) {
 		std::cout << e.what() << std::endl;
+		std::stringstream output{};
+		output << "Unexpected exception:\n" 
+			<< e.what()
+			<< "\nin Flightloop.";
+		StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 		exit(1);
 	}
 
+	output.clear();
+	output << "Fligh Loop end"
+		<< "****************************************************************************************************\n";
+	StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 	// Return 1.0 to indicate that we want this function to be called again in 1 second.
 	return 1.0;
 }

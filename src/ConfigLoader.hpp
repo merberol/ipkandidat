@@ -6,13 +6,16 @@
 #include <windows.h>
 #include <algorithm>
 #include "includes\bHaptics\HapticLibrary.h"
-#include "pyFunction.hpp"
+#include "Logger.hpp"
+
 
 
 struct ConfigLoader {
 
 	ConfigLoader() {
-		std::cout << "### Creating ConfigLoader ###" << std::endl;
+#ifdef DEBUG
+		StreamLogger::log("ConfigLoader : Constructor", "liuHapticLog.txt",  "### Creating ConfigLoader ###" );
+#endif
 	}
 
 	void run(EventNameMap & eventNameMap, EventUsedVec & eventUsed,  TactFileVec & tactFiles, RefPathVector & refPathVec,
@@ -31,11 +34,7 @@ struct ConfigLoader {
 
 		if ( eventUsed.size() != tactFileNames.size() || tactFileNames.size() != pyFileNames.size() || pyFileNames.size() != eventTypeRefs.size() )
 		{
-			std::ofstream outfile;
-			outfile.open("liuHapticLog.txt", std::ios_base::app);
-  			outfile << "Vector sizes don't match!";
-			outfile << eventUsed.size() << " / " << tactFileNames.size() << " / " << pyFileNames.size() << " / " << eventTypeRefs.size();
-			outfile.close();
+			StreamLogger::log("ConfigLoader : run", "liuHapticLog.txt", "Vector sizes don't match!");
 			exit(1);
 		}
 
@@ -48,28 +47,35 @@ struct ConfigLoader {
 	}
 	
 	std::string loadTactFile(std::string fileName = "test.tact") {
-		std::cout << "trying to open" << fileName << std::endl;
+#ifdef DEBUG
+		{
+			std::stringstream output{};
+			output << "trying to open" << fileName;
+			StreamLogger::log("EventHandler : runEvent", "liuHapticLog.txt", output);
+		}
+#endif
 		// test.tact file should be in the same folder
 		std::ifstream fileIn("Resources\\plugins\\LiuHaptics\\tactFiles\\" + fileName);
-		if (fileIn.is_open()) {
-			std::cout << fileName << " is open" << std::endl;
+		if (!fileIn.is_open()) {
+			StreamLogger::log("ConfigLoader : loadTactFile", "liuHapticLog.txt", fileName + " failed to open");
+			exit(1);	
 		}
-		else {
-			std::cout << ".tact file failed to open" << std::endl;
-		}
+
+#ifdef DEBUG
+		StreamLogger::log("EventHandler : runEvent", "liuHapticLog.txt", fileName + " is open");
+#endif
+	
 		char* inputString = new char[100000];
 		if (fileIn.good()) {
-			std::cout << "file is good " << std::endl;
 			while(!fileIn.eof()){
 				fileIn.getline(inputString, 100000);
 			}
 			fileIn.close();
-			std::cout << "file is read" << std::endl;
 			return inputString;
 		} else {
 			if(fileIn.is_open())
 				fileIn.close();
-			std::cout << "Failed to register the feedback file." << std::endl;
+			StreamLogger::log("ConfigLoader : loadTactFile", "liuHapticLog.txt", "Failed to load the feedback file due to file error.");
 			return "";
 		}
 	}
@@ -94,6 +100,7 @@ struct ConfigLoader {
 		int index = 0;
 		while (!fileIn.eof())
 		{
+			// TODO: breakout into its own method
 			row.clear();
 			std::string line{};
 			// skip headers in CSV file 
@@ -109,12 +116,13 @@ struct ConfigLoader {
 			while (std::getline(ss, word, ';') ) {
 				row.push_back(word);
 			}
+			// end TODO
 			if (row.empty())
 			{
 				break;
 			}
 
-			// register event with Player
+		
 			std::vector<RefTypePair> eventRefs{};
 			std::string eventName = row[0];
 			std::string tactfilename = row[1];
@@ -122,25 +130,20 @@ struct ConfigLoader {
 			std::string pyFileName = row[3];
 			pyFileNames.push_back(pyFileName);
 			int numDataPoints = stoi(row[4]);
-			
-			std::cout << "\nprocessConfig for " << eventName << " with " << numDataPoints << " data points" << std::endl;
-			
+	
+			// TODO: Breakout to own method
 			if (numDataPoints > 0) {
 				for ( int i = 0; i < numDataPoints * 2; i+=2){
 					int idx = i+5;
-					std::cout << "type : " << row[idx] << std::endl;
-					std::cout << "refstring : " << row[idx+1] << std::endl;
 					refVec.push_back(row[idx+1]);
 					RefTypePair tmp{row[idx], row[idx+1]};
 					eventRefs.push_back(tmp);
 				}
 			}
+			// end TODO
 			eventTypeRefs.push_back(eventRefs);
-			std::cout << "pushing " << tactfilename << " to tactFiles" << std::endl;
 			tactFileNames.push_back(tactfilename); // tact file to event
-			std::cout << "pushing " << used << " to eventUsed" << std::endl;
 			eventUsed.push_back(used);
-			std::cout << "emplacing " << eventName << " and " << index << " to eventNameMap" << std::endl;
 			eventNameMap.emplace(eventName, index);
 			index++;
 		}

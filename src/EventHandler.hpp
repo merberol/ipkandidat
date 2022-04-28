@@ -12,6 +12,7 @@
 #include "types.h"
 #include "ConfigLoader.hpp"
 #include "includes\bHaptics\HapticLibrary.h"
+#include "Logger.hpp"
 #include "XPLMDataAccess.h"
 
 #define DEBUG
@@ -44,23 +45,24 @@ public:
 	EventHandler(std::string id) 
 		:_id{ id }
 	{
-		std::cout << "### Creating EventHandler ###" << std::endl;
+
 		char playerPath[200];
 		int esize = 2;
 		bool res = TryGetExePath(playerPath, esize);
 		auto path = GetExePath();
 
-		if (res) {
-			std::cout << "GetExePath bHaptics Player is installed: " << playerPath << std::endl << path << std::endl;
-			std::cout << "Player path size: " << esize << std::endl;
+		if (!res) {
+			std::stringstream output{};
+			output << "Cannot find exe path for Bhaptics Player.";
+			StreamLogger::log("EventHandler : Constructor", "liuHapticLog.txt", output);
+			exit(1);
 		}
-		else {
-			std::cout << "Cannot find exe path." << std::endl;
-		}
+		// initialising bHapticPlayer link
+		Initialise(id.c_str(), "LiuXPlaneHapticPlugin");
 
-		startBHapticsPlayer(id);
 		ConfigLoader configLoader{};
 		configLoader.run(eventNameMap, eventUsed, tactFiles, refPathVec, eventTypeRefs, pyFileNames);
+
 		worker.addFileMap(tactFiles);
 	};
 
@@ -69,17 +71,16 @@ public:
 		std::cout << "### Destroying EventHandler ###" << std::endl;
 	}
 
-	void startBHapticsPlayer(std::string id) {
-		std::cout << "Starting initialization." << std::endl;
-		auto start = std::chrono::system_clock::now();
-		Initialise(id.c_str(), "LiuXPlaneHapticPlugin");
-		auto end = std::chrono::system_clock::now();
-		std::chrono::duration<double> elapsed_seconds = end - start;
-		std::cout << "Initialization elapsed time: " << elapsed_seconds.count() << "s\n";
-	}
-
 	void runEvent(std::string eventName, std::unordered_map<std::string, double> const& dataMap) {
 		bool result{};
+	#ifdef DEBUG
+		{
+			std::stringstream output{};
+			output << "Running Event: " << eventName;
+
+			StreamLogger::log("EventHandler : Destructor", "liuHapticLog.txt", output);
+		}
+#endif
 		try{
 			int index = getIndex(eventName);
 			std::string  include = pyFileNames[index];
@@ -90,10 +91,9 @@ public:
 			}
 		}
 		catch(std::exception & e){
-			std::ofstream outfile;
-			outfile.open("liuHapticLog.txt", std::ios_base::app);
-  			outfile << "ERROR: Failed to compile args cause: " << e.what();
-			outfile.close();
+			std::stringstream output{};
+			output << "ERROR: Failed to compile args cause: " << e.what();
+			StreamLogger::log("EventHandler : runEvent", "liuHapticLog.txt", output);
 			exit(1);
 		}
 
@@ -103,35 +103,64 @@ public:
 			}
 		}
 		catch(std::exception & e) {
-			std::ofstream outfile;
-			outfile.open("liuHapticLog.txt", std::ios_base::app);
-			outfile << e.what() << "\n";
-			outfile.close();
+			std::stringstream output{};
+			output << "Error: " << e.what();
+			StreamLogger::log("EventHandler : runEvent", "liuHapticLog.txt", output);
 			exit(1);
 		}
 	}
 
 	int getIndex(std::string eventName){
 		int index;
+#ifdef DEBUG
+		{
+			std::stringstream output{};
+			output << "getting Index for " << eventName;
+
+			StreamLogger::log("EventHandler : getIndex", "liuHapticLog.txt", output);
+		}
+#endif
 		try{
 			index = eventNameMap.at(eventName);
 		}
 		catch ( std::exception & e){
-			std::ofstream outfile;
-			outfile << "EventName not found in eventNameMap\nError: " << e.what();
-			outfile.close();
+			std::stringstream output{};
+			output << "EventName not found in eventNameMap\nError: " << e.what();
+			StreamLogger::log("EventHandler :getIndex", "liuHapticLog.txt", output);
 			exit(1);
 		}
+#ifdef DEBUG
+		{
+			std::stringstream output{};
+			output << "returning index: " << index;
+
+			StreamLogger::log("EventHandler : getIndex", "liuHapticLog.txt", output);
+		}
+#endif
 		return index;
 	}
 
 	bool getIsUsed(std::string eventName){
+#ifdef DEBUG
+		{
+			std::stringstream output{};
+			output << "Getting if event " << eventName << "is used";
+
+			StreamLogger::log("EventHandler : getIsUsed", "liuHapticLog.txt", output);
+		}
+#endif
 		bool result = eventUsed[getIndex(eventName)];
 
 		if (result && eventName == "ReadyEvent") {
 			eventUsed[getIndex(eventName)] = false;
 		}
-
+#ifdef DEBUG
+		{
+			std::stringstream output{};
+			output << "returning result " << result;
+			StreamLogger::log("EventHandler : getIsUsed", "liuHapticLog.txt", output);
+		}
+#endif
 		return result;
 	}
 
@@ -139,7 +168,14 @@ private:
 	HapticInterface worker{};
 
 	bool call(std::string eventName, std::string fileName, std::unordered_map<std::string, double> const& dataMap) {
+	#ifdef DEBUG
+		{
+			std::stringstream output{};
+			output << "Calling Python logic for event: " << eventName;
 
+			StreamLogger::log("EventHandler : call", "liuHapticLog.txt", output);
+		}
+#endif
 		CPyInstance pyInstance;
 		std::vector<CPyObject *> pyObjects;
 		int index = EventHandler::getIndex(eventName);
@@ -166,18 +202,19 @@ private:
 				CPyObject funcArgs = PyTuple_New(size);
 				int counter = 0;
 
-				for (std::pair<std::string, double> x : dataMap) {
-					pyObjects.push_back(new CPyObject{PyFloat_FromDouble(x.second)});
+				for (RefTypePair x : dataRefStrings) {
+					pyObjects.push_back(new CPyObject{PyFloat_FromDouble(dataMap.at(x.second))});
 				}
 				
 				for (CPyObject* elem : pyObjects)
 				{
 					if(funcArgs.getObject() == nullptr)
 					{
-						std::ofstream outfile;
-						outfile.open("liuHapticLog.txt", std::ios_base::app);
-						outfile << "FuncArgs contains nothing. \n";
-						outfile.close();
+						{
+							std::stringstream output{};
+							output << "FuncArgs contains nothing.";
+							StreamLogger::log("EventHandler : call", "liuHapticLog.txt", output);
+						}
 						exit(1);
 					}
 
@@ -192,10 +229,9 @@ private:
 			}
 		}
 		else {
-			std::ofstream outfile;
-			outfile.open("liuHapticLog.txt", std::ios_base::app);
-			outfile << " Error when loading file \n";
-			outfile.close();
+			std::stringstream output{};
+			output << " Error when loading file: ";
+			StreamLogger::log("EventHandler : call", "liuHapticLog.txt", output);
 			exit(1);
 		}
 
@@ -211,18 +247,24 @@ private:
 
 HapticInterface::HapticInterface()
 {
-	#ifdef DEBUG
-		AllocConsole();
-		auto out = freopen("CONOUT$", "w", stdout);
-		auto err = freopen("CONOUT$", "w", stderr);
-		std::cout << "DEBUG: Active" << std::endl;
-	#endif // DEBUG
-
-	std::cout << "### Creating HapticInterface ###" << std::endl;
+#ifdef DEBUG
+	{
+		std::stringstream output{};
+		output << "### Creating HapticInterface ###";
+		StreamLogger::log("EventHandler : Constructor", "liuHapticLog.txt", output);
+	}
+#endif
 }
 
 HapticInterface::~HapticInterface() {
-	std::cout << "### Destroying HapticInterface ###" << std::endl;
+#ifdef DEBUG
+	{
+		std::stringstream output{};
+		output << "### Destroying HapticInterface ###";
+
+		StreamLogger::log("EventHandler : Destructor", "liuHapticLog.txt", output);
+	}
+#endif
 }
 
 void HapticInterface::addFileMap(EventToFileVec eventFileVec) {
@@ -230,15 +272,13 @@ void HapticInterface::addFileMap(EventToFileVec eventFileVec) {
 }
 
 void HapticInterface::sendToVest(std::string eventName, EventHandler const& eventHandler) {
+#ifdef DEBUG
 	{
-		std::ofstream outfile;
-		outfile.open("liuHapticLog.txt", std::ios_base::app);
-		outfile << "*********************\nInin send\n ******************\n";
-		outfile << "running function for event: " << eventName << "\n";
-		outfile.close();
-
-		std::cout << "Send - running event for " << eventName << std::endl;
+		std::stringstream output{};
+		output << "running function for event: " << eventName ;
+		StreamLogger::log("EventHandler : sendToVest", "liuHapticLog.txt", output);
 	}
+#endif
 	int index = eventHandler.eventNameMap.at(eventName) ;
 	std::string tactFileStr = eventFileVec[index];
 	RegisterFeedbackFromTactFile(eventName.c_str(), tactFileStr.c_str());
