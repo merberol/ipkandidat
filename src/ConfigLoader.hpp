@@ -88,40 +88,25 @@ struct ConfigLoader {
 		std::vector<std::string> &pyFileNames,
 		std::vector<std::string> &refVec
 		){
-
 		std::fstream fileIn;
 		fileIn.open("Resources\\plugins\\LiuHaptics\\ConfigCSV.csv", std::fstream::in);
-		if (fileIn.is_open()) {
-			std::cout << "file is open" << std::endl;
+		if (!fileIn.is_open()) {
+			StreamLogger::log("ConfigLoader : processConfig", "liuHapticLog.txt", "Failed to open ConfigCSV.csv.");
+			exit(1);
 		}
-		std::string word{};
+
 		std::vector<std::string> row{};
 		bool first{ true };
 		int index = 0;
+
 		while (!fileIn.eof())
 		{
-			// TODO: breakout into its own method
-			row.clear();
-			std::string line{};
-			// skip headers in CSV file 
-			if (first) {
-				std::getline(fileIn, line, '\n');
-				line = "";
-				first = !first;
-			}
-			std::getline(fileIn, line, '\n');
-			std::stringstream ss;
-			ss << line;
-
-			while (std::getline(ss, word, ';') ) {
-				row.push_back(word);
-			}
-			// end TODO
-			if (row.empty())
-			{
+			if (row.empty()) {
 				break;
 			}
-
+			else {
+				fillRowWithConfigElements(row, first, fileIn);
+			}
 		
 			std::vector<RefTypePair> eventRefs{};
 			std::string eventName = row[0];
@@ -131,28 +116,51 @@ struct ConfigLoader {
 			pyFileNames.push_back(pyFileName);
 			int numDataPoints = stoi(row[4]);
 	
-			// TODO: Breakout to own method
-			if (numDataPoints > 0) {
-				for ( int i = 0; i < numDataPoints * 2; i+=2){
-					int idx = i+5;
-					refVec.push_back(row[idx+1]);
-					RefTypePair tmp{row[idx], row[idx+1]};
-					eventRefs.push_back(tmp);
-				}
-			}
-			// end TODO
+			fillDataRefVectors(numDataPoints, row, refVec, eventRefs);
+			row.clear();
+
 			eventTypeRefs.push_back(eventRefs);
-			tactFileNames.push_back(tactfilename); // tact file to event
+			tactFileNames.push_back(tactfilename);
 			eventUsed.push_back(used);
 			eventNameMap.emplace(eventName, index);
 			index++;
 		}
 		fileIn.close();
+		removeDuplicateRefs(refVec);
+	}
 
-		// Remove duplicates from refVec.
+	void fillRowWithConfigElements(std::vector<std::string> & row, bool & first, std::fstream & fileIn) {
+		std::string line{};
+		std::string word{};
+		// Skip headers in CSV file
+		if (first) {
+			std::getline(fileIn, line, '\n');
+			line = "";
+			first = !first;
+		}
+		std::getline(fileIn, line, '\n');
+		std::stringstream ss;
+		ss << line;
+
+		while (std::getline(ss, word, ';') ) {
+			row.push_back(word);
+		}
+	}
+
+	void fillDataRefVectors(int const& numDataPoints, std::vector<std::string> const& row, std::vector<std::string> & refVec, std::vector<RefTypePair> & eventRefs) {
+		if (numDataPoints > 0) {
+			for ( int i = 0; i < numDataPoints * 2; i+=2){
+				int idx = i+5;
+				refVec.push_back(row[idx+1]);
+				RefTypePair tmp{row[idx], row[idx+1]};
+				eventRefs.push_back(tmp);
+			}
+		}
+	}
+
+	void removeDuplicateRefs(std::vector<std::string> & refVec) {
 		std::sort(begin(refVec), end(refVec));
 		auto c_itr = std::unique(begin(refVec), end(refVec));
 		refVec.erase(c_itr, refVec.end());
 	}
-
 };

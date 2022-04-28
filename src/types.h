@@ -3,23 +3,14 @@
 #include <utility>
 #include <vector>
 #include <unordered_map>
-#include <tuple>
 #include <string>
-#include <stdio.h>
-#include <memory>
-#include "Python.h"
 #include "pyhelper.hpp"
-#include "XPLMProcessing.h"
 #include "XPLMDataAccess.h"
-#include "XPLMUtilities.h"
-
-
 
 using DataRefMap = std::unordered_map<std::string, XPLMDataRef>;
 using RefTypePair = std::pair<std::string, std::string>;
 using EventToRefsMap = std::unordered_map<std::string, std::vector<RefTypePair>>;
 using EventToFileVec = std::vector<std::string>;
-
 using EventNameMap = std::unordered_map <std::string, int>;
 using EventIndexPair = std::pair<std::string, int>;
 using EventUsedVec = std::vector<bool>;

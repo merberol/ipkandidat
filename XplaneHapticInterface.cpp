@@ -35,7 +35,6 @@
 #include "src/Logger.hpp"
 #include "XPLMProcessing.h"
 #include "XPLMDataAccess.h"
-#include "XPLMUtilities.h"
 
 
 static DataRefMap dataRefMap{};
