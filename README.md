@@ -1,36 +1,28 @@
 # Liu Haptic interface for X-Plane
+## 1 UserGuide
+    to setup this project as a user all you need is this filestructure see more details under 2.1 
+    C:\X-Plane 11\Resources\plugins\LiuHaptics
+        I_ win.xpl
+        I_ ConfigCSV.csv <-- Required name and spelling !!CaseSensitive!!
+        I_ haptic_library.dll
+        I_ python39.dll
+        I
+        I_ \PythonFiles
+        I   I_ ReadyEvent.py   <--- Optional but provided see python files below.
+        I
+        I_ \tactFiles
+            I_ put tact files here. 
 
-## Main files
-### Source
-    XplaneHapticInterface.cpp
-    haptic_library.dll
-    python39.dll
-    python39_d.dll
-#### src/
-    ConfigLoader.hpp
-    EventHandler.hpp
-    pyFuction.hpp
-    types.h 
-#### libs/
-    python39_d.lib
-    python39.lib
-##### bHapticSDK/
-##### xplane/
-    XPLM_64.lib
-    XPLM.lib
-    XP_widgets_64.lib
-    XP_widgets.lib
-#### includes/
-##### bHaptics/   
-    HapticLibrary.h
-    model.h
-##### Python39/
-    copied all .h files from original install place
-##### xplane/CHeaders
-    all
+### 1.1 Needed software
+    This plug in needs bHaptics Player installed and running in order to send haptic data to the vest.
+    the bHaptics player uses bluetooth to connect to the vest wich comes with a bluetooth USB adapter.
+
+    the system has not been tested in an enviorment where python is not installed.
 
 
-### program @ C:\X-Plane 11\Resources\plugins
+##  2 Main files
+
+### 2.1 program @ C:\X-Plane 11\Resources\plugins
 
 #### LiuHaptics
     win.xpl <--- main plugin file
@@ -72,5 +64,33 @@
 ##### tactFiles
     Put .tact files here
 
+
+### 2.2 Source
+    XplaneHapticInterface.cpp
+    haptic_library.dll
+    python39.dll
+    python39_d.dll
+#### src/
+    ConfigLoader.hpp
+    EventHandler.hpp
+    pyFuction.hpp
+    types.h 
+#### libs/
+    python39_d.lib
+    python39.lib
+##### bHapticSDK/
+##### xplane/
+    XPLM_64.lib
+    XPLM.lib
+    XP_widgets_64.lib
+    XP_widgets.lib
+#### includes/
+##### bHaptics/   
+    HapticLibrary.h
+    model.h
+##### Python39/
+    copied all .h files from original install place
+##### xplane/CHeaders
+    all
 
 
