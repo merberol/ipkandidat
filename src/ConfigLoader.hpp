@@ -101,10 +101,11 @@ struct ConfigLoader {
 
 		while (!fileIn.eof())
 		{
-			if (row.empty()) {
+			if (row.empty() && !first) {
 				break;
 			}
 			else {
+				row.clear();
 				fillRowWithConfigElements(row, first, fileIn);
 			}
 		
@@ -117,7 +118,6 @@ struct ConfigLoader {
 			int numDataPoints = stoi(row[4]);
 	
 			fillDataRefVectors(numDataPoints, row, refVec, eventRefs);
-			row.clear();
 
 			eventTypeRefs.push_back(eventRefs);
 			tactFileNames.push_back(tactfilename);

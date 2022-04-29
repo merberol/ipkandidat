@@ -45,6 +45,7 @@ public:
 	EventHandler(std::string id) 
 		:_id{ id }
 	{
+		StreamLogger::log("EventHandler : Constructor", "liuHapticLog.txt", "############# Instansiating EventHandler ##############");
 		char playerPath[200];
 		int esize = 2;
 		bool res = TryGetExePath(playerPath, esize);
@@ -72,7 +73,7 @@ public:
 
 	void runEvent(std::string eventName, std::unordered_map<std::string, double> const& dataMap) {
 		bool result{};
-	#ifdef DEBUG
+#ifdef DEBUG
 		{
 			std::stringstream output{};
 			output << "Running Event: " << eventName;
