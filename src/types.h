@@ -7,6 +7,9 @@
 #include "pyhelper.hpp"
 #include "XPLMDataAccess.h"
 
+#define DEBUG
+
+
 using DataRefMap = std::unordered_map<std::string, XPLMDataRef>;
 using RefTypePair = std::pair<std::string, std::string>;
 using EventToRefsMap = std::unordered_map<std::string, std::vector<RefTypePair>>;

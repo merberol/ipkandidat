@@ -15,7 +15,7 @@
 #include "Logger.hpp"
 #include "XPLMDataAccess.h"
 
-#define DEBUG
+
 
 class EventHandler;
 
@@ -24,8 +24,8 @@ class HapticInterface {
 public:
 	HapticInterface();
 	~HapticInterface();
-	void addFileMap(EventToFileVec eventFileVec);
-	void sendToVest(std::string eventName, EventHandler const& eventHandler);
+	void addFileVec(EventToFileVec & eventFileVec);
+	void sendToVest(std::string const& eventName, EventHandler const& eventHandler) const;
 };
 
 class EventHandler
@@ -38,7 +38,7 @@ public:
 	std::vector<std::vector<RefTypePair>> eventTypeRefs{};
 	RefPathVector refPathVec{};
 	PyFileNameVec pyFileNames{};
-	TactFileVec tactFiles{};
+	
 	
 	EventHandler() = default;
 
@@ -58,16 +58,16 @@ public:
 		}
 		// initialising bHapticPlayer link
 		Initialise(id.c_str(), "LiuXPlaneHapticPlugin");
-
+		TactFileVec tactFiles{};
 		ConfigLoader configLoader{};
 		configLoader.run(eventNameMap, eventUsed, tactFiles, refPathVec, eventTypeRefs, pyFileNames);
 
-		worker.addFileMap(tactFiles);
+		worker.addFileVec(tactFiles);
 	};
 
 	~EventHandler() {
 		Destroy();
-		std::cout << "### Destroying EventHandler ###" << std::endl;
+		StreamLogger::log("EventHandler : Destructor", "liuHapticLog.txt", "############# Destroying EventHandler ##############");
 	}
 
 	void runEvent(std::string eventName, std::unordered_map<std::string, double> const& dataMap) {
@@ -109,7 +109,7 @@ public:
 		}
 	}
 
-	int getIndex(std::string eventName){
+	int getIndex(std::string const& eventName) const{
 		int index;
 #ifdef DEBUG
 		{
@@ -139,7 +139,7 @@ public:
 		return index;
 	}
 
-	bool getIsUsed(std::string eventName){
+	bool getIsUsed(std::string const& eventName) {
 #ifdef DEBUG
 		{
 			std::stringstream output{};
@@ -243,6 +243,11 @@ private:
 	}
 };
 
+/*
+ / ---------------------------------------------------------------------------------------------------------------------------------------------
+ / ------------------------------------------------ Haptic Interface Implementation ------------------------------------------------------------
+ / ---------------------------------------------------------------------------------------------------------------------------------------------
+*/
 
 HapticInterface::HapticInterface()
 {
@@ -266,11 +271,23 @@ HapticInterface::~HapticInterface() {
 #endif
 }
 
-void HapticInterface::addFileMap(EventToFileVec eventFileVec) {
-	this->eventFileVec = eventFileVec;
+/**
+ * @brief Adds a event file map to the in
+ * 
+ * @param eventFileVec 
+ */
+void HapticInterface::addFileVec(EventToFileVec & eventFileVec) {
+	if( this->eventFileVec.empty() ){
+		this->eventFileVec = std::move(eventFileVec);
+	}
+	else{
+		StreamLogger::log(" HapticInterface : addFileVec", "liuHapticLog.txt","ERROR: Trying to overwrite eventFileMap during run time");
+		exit(1);
+
+	}
 }
 
-void HapticInterface::sendToVest(std::string eventName, EventHandler const& eventHandler) {
+void HapticInterface::sendToVest(std::string const& eventName, EventHandler const& eventHandler) const {
 #ifdef DEBUG
 	{
 		std::stringstream output{};
@@ -278,8 +295,9 @@ void HapticInterface::sendToVest(std::string eventName, EventHandler const& even
 		StreamLogger::log("EventHandler : sendToVest", "liuHapticLog.txt", output);
 	}
 #endif
-	int index = eventHandler.eventNameMap.at(eventName) ;
+	int index = eventHandler.getIndex(eventName) ;
 	std::string tactFileStr = eventFileVec[index];
 	RegisterFeedbackFromTactFile(eventName.c_str(), tactFileStr.c_str());
 	SubmitRegistered(eventName.c_str());
+	
 }
