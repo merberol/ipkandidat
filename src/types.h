@@ -7,7 +7,7 @@
 #include "pyhelper.hpp"
 #include "XPLMDataAccess.h"
 
-#define DEBUG
+//#define DEBUG
 
 
 using DataRefMap = std::unordered_map<std::string, XPLMDataRef>;

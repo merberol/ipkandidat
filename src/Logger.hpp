@@ -29,5 +29,13 @@ public:
         StreamLogger::log(context, fileName, message.str());
         return;
     }
+
+    static void lograw(std::string const& fileName,  std::string const& message){
+        std::ofstream ofile;
+        ofile.open(fileName, std::ios_base::app);
+        ofile << message;
+        ofile.close();
+        return;
+    }
     
 };

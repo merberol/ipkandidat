@@ -21,6 +21,9 @@
 #define _MBCS
 
 
+#define TIME_CHECK
+
+
 #include <stdio.h>
 #include <string.h>
 #include <string>
@@ -42,6 +45,12 @@
 static DataRefMap dataRefMap{};
 static std::unordered_map<std::string, double> dataMap;
 EventHandler* eventHandler;
+
+#ifdef TIME_CHECK
+static double loadtime{};
+static std::vector<double> flightLoopData{};
+static std::unordered_map<std::string, std::vector<double>*> eventTImeData{};
+#endif
 
 static float	HapticFlightLoopCallback(
                                    float                inElapsedSinceLastCall,    
@@ -66,8 +75,10 @@ PLUGIN_API int XPluginStart(
 
 #ifdef DEBUG
 	StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt",  "\n***************\nBuilding dataRefMap\n***************\n");
-	auto loadStart = std::chrono::system_clock::now();
 #endif
+
+	auto loadStart = std::chrono::system_clock::now();
+
 	// dataref strings required, get from config loader via EventHandlers interface
 	for (int i = 0; i < eventHandler->refPathVec.size(); i++) {
 		XPLMDataRef value = XPLMFindDataRef(eventHandler->refPathVec[i].c_str());
@@ -79,9 +90,15 @@ PLUGIN_API int XPluginStart(
 #endif
 		dataRefMap.emplace(eventHandler->refPathVec[i], value);
 	}
-#ifdef DEBUG
 	auto loadEnd = std::chrono::system_clock::now();
-	 std::chrono::duration<double> elapsed = loadEnd - loadStart;
+	std::chrono::duration<double> elapsed = loadEnd - loadStart;
+
+// for time testing purposes.
+#ifdef TIME_CHECK
+	loadtime = elapsed.count();
+#endif
+
+#ifdef DEBUG
 	std::stringstream output{};
 	output <<  "Done\n"
 		<< "Loading took " << elapsed.count() << "seconds\n***************\n";
@@ -161,16 +178,23 @@ float	HapticFlightLoopCallback(
                                    void *               inRefcon)
 {
 	std::stringstream output{};
-#ifdef DEBUG
+#ifdef TIME_CHECK
 	auto flStart = std::chrono::system_clock::now();
+#endif
+
+#ifdef DEBUG
 	output << "****************************************************************************************************\n"
 		<< "Flight Loop start\n";
 	StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 #endif
 	try {
 		for (EventIndexPair p : eventHandler->eventNameMap) {
-#ifdef DEBUG
+
+#ifdef TIME_CHECK
 			auto elStart = std::chrono::system_clock::now();
+#endif
+
+#ifdef DEBUG
 			output.clear();
 			output << "****************************************************************************\n"
 				<< "Event Loop Start\n";
@@ -180,11 +204,21 @@ float	HapticFlightLoopCallback(
 				dataMap = getData(p.first);
 				eventHandler->runEvent(p.first, dataMap);
 			}
-#ifdef DEBUG
+#ifdef TIME_CHECK
 			auto elEnd = std::chrono::system_clock::now();
 			std::chrono::duration<double> ELTime = elEnd - elStart;
+			if(eventTImeData.find(p.first) == eventTImeData.end()){
+				eventTImeData.emplace(p.first, new std::vector<double>{});
+			}
+			eventTImeData.at(p.first)->push_back(ELTime.count());
+
+#endif
+#ifdef DEBUG
 			output.clear();
-			output << "Event Loop End with run time: " << ELTime.count() << " seconds" 
+			output << "Event Loop End"
+#ifdef TIME_CHECK
+				<< " with run time: " << ELTime.count() << " seconds" 
+#endif
 				<< "\n****************************************************************************";
 			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 #endif
@@ -199,11 +233,18 @@ float	HapticFlightLoopCallback(
 		StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 		exit(1);
 	}
-#ifdef DEBUG
+#ifdef TIME_CHECK
 	auto flEnd = std::chrono::system_clock::now();
 	std::chrono::duration<double> FLTime = flEnd - flStart;
+	flightLoopData.push_back(FLTime.count());
+
+#endif
+#ifdef DEBUG
 	output.clear();
-	output << "Fligh Loop end with run time: " << FLTime.count() << " seconds" 
+	output << "Fligh Loop end"
+#ifdef TIME_CHECK
+		<< " with run time: " << FLTime.count() << " seconds"
+#endif
 		<< "\n****************************************************************************************************\n";
 	StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 #endif
@@ -211,11 +252,43 @@ float	HapticFlightLoopCallback(
 	return 1.0;
 }
 
+void saveData(std::string fileName, std::vector<double> const& data, std::string columnName){
+	std::stringstream output{columnName +";\n"};
+	for(double time: data){
+		output << time << ";\n";
+	}
+	StreamLogger::lograw(fileName, output.str());
+}
+
+void buildFlightLoopFile(){
+	saveData("flightloopdata.csv", flightLoopData, "loopTimes");
+}
+
+void buildEventTimesFile(){
+	
+	for( auto eventPair : eventTImeData) {
+		saveData( eventPair.first+"data.csv", *eventPair.second, eventPair.first);
+	}
+}
+
+
+void saveData()
+{
+	StreamLogger::lograw("Testfile1.csv", "Test;Thing;foo\n0;1;2\n");
+	buildFlightLoopFile();
+	buildEventTimesFile();
+}
+
 PLUGIN_API void	XPluginStop(void)
 {
 	// Destroy allocated resources.
 	delete eventHandler;
 	eventHandler = nullptr;
+
+#ifdef TIME_CHECK
+	saveData();
+#endif
+
 	XPLMUnregisterFlightLoopCallback(HapticFlightLoopCallback, NULL);
 }
 

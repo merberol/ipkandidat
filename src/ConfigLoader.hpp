@@ -5,8 +5,10 @@
 #include <sstream>
 #include <windows.h>
 #include <algorithm>
-#include "includes\bHaptics\HapticLibrary.h"
 #include "Logger.hpp"
+#include "types.h"
+#include "includes\bHaptics\HapticLibrary.h"
+
 
 
 
