@@ -21,7 +21,7 @@
 #define _MBCS
 
 
-#define TIME_CHECK
+
 
 
 #include <stdio.h>
@@ -47,9 +47,12 @@ static std::unordered_map<std::string, double> dataMap;
 EventHandler* eventHandler;
 
 #ifdef TIME_CHECK
+namespace HI {
+
 static double loadtime{};
 static std::vector<double> flightLoopData{};
-static std::unordered_map<std::string, std::vector<double>*> eventTImeData{};
+static std::unordered_map<std::string, std::vector<double>*> eventTimeData{};
+}
 #endif
 
 static float	HapticFlightLoopCallback(
@@ -95,7 +98,7 @@ PLUGIN_API int XPluginStart(
 
 // for time testing purposes.
 #ifdef TIME_CHECK
-	loadtime = elapsed.count();
+	HI::loadtime = elapsed.count();
 #endif
 
 #ifdef DEBUG
@@ -207,10 +210,10 @@ float	HapticFlightLoopCallback(
 #ifdef TIME_CHECK
 			auto elEnd = std::chrono::system_clock::now();
 			std::chrono::duration<double> ELTime = elEnd - elStart;
-			if(eventTImeData.find(p.first) == eventTImeData.end()){
-				eventTImeData.emplace(p.first, new std::vector<double>{});
+			if(HI::eventTimeData.find(p.first) == HI::eventTimeData.end()){
+				HI::eventTimeData.emplace(p.first, new std::vector<double>{});
 			}
-			eventTImeData.at(p.first)->push_back(ELTime.count());
+			HI::eventTimeData.at(p.first)->push_back(ELTime.count());
 
 #endif
 #ifdef DEBUG
@@ -236,7 +239,7 @@ float	HapticFlightLoopCallback(
 #ifdef TIME_CHECK
 	auto flEnd = std::chrono::system_clock::now();
 	std::chrono::duration<double> FLTime = flEnd - flStart;
-	flightLoopData.push_back(FLTime.count());
+	HI::flightLoopData.push_back(FLTime.count());
 
 #endif
 #ifdef DEBUG
@@ -261,12 +264,12 @@ void saveData(std::string fileName, std::vector<double> const& data, std::string
 }
 
 void buildFlightLoopFile(){
-	saveData("flightloopdata.csv", flightLoopData, "loopTimes");
+	saveData("flightloopdata.csv", HI::flightLoopData, "loopTimes");
 }
 
 void buildEventTimesFile(){
 	
-	for( auto eventPair : eventTImeData) {
+	for( auto eventPair : HI::eventTimeData) {
 		saveData( eventPair.first+"data.csv", *eventPair.second, eventPair.first);
 	}
 }
@@ -274,22 +277,34 @@ void buildEventTimesFile(){
 
 void saveData()
 {
-	StreamLogger::lograw("Testfile1.csv", "Test;Thing;foo\n0;1;2\n");
 	buildFlightLoopFile();
 	buildEventTimesFile();
+	saveData("TopCallTimes.csv", eventHandler->TopLevelCallTimer, "calltimes");
+	saveData("TopSendTimes.csv", eventHandler->TopLevelSendTimer, "sendtimes");
+	saveData("PyImportTimes.csv", eventHandler->PyImportTimes, "importTimes");
+	saveData("PyParseTimes.csv", eventHandler->PyArgParseTimes, "parseTimes");
+	saveData("PyCallTimes.csv", eventHandler->PyCallTimes, "pycallTimes");
 }
 
 PLUGIN_API void	XPluginStop(void)
 {
-	// Destroy allocated resources.
-	delete eventHandler;
-	eventHandler = nullptr;
-
+#ifdef DEBUG
+	StreamLogger::log("XplaneHapticInterface : XPluginStop", "liuHapticLog.txt", "shutting down plugin");
+#endif
 #ifdef TIME_CHECK
 	saveData();
 #endif
 
+	// Destroy allocated resources.
+	delete eventHandler;
+	eventHandler = nullptr;
+
+
+
 	XPLMUnregisterFlightLoopCallback(HapticFlightLoopCallback, NULL);
+#ifdef DEBUG
+	StreamLogger::log("XplaneHapticInterface : XPluginStop", "liuHapticLog.txt", "exiting scope");
+#endif
 }
 
 PLUGIN_API void XPluginDisable(void) {}

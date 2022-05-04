@@ -8,6 +8,7 @@
 #include "XPLMDataAccess.h"
 
 //#define DEBUG
+#define TIME_CHECK
 
 
 using DataRefMap = std::unordered_map<std::string, XPLMDataRef>;

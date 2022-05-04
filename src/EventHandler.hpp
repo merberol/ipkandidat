@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <memory>
 #include <fstream>
+#include <chrono>
 #include "types.h"
 #include "ConfigLoader.hpp"
 #include "includes\bHaptics\HapticLibrary.h"
@@ -38,6 +39,14 @@ public:
 	std::vector<std::vector<RefTypePair>> eventTypeRefs{};
 	RefPathVector refPathVec{};
 	PyFileNameVec pyFileNames{};
+
+#ifdef TIME_CHECK
+	std::vector<double> TopLevelCallTimer{};
+	std::vector<double> TopLevelSendTimer{};
+	std::vector<double> PyImportTimes{};
+	std::vector<double> PyArgParseTimes{};
+	std::vector<double> PyCallTimes{};
+#endif
 	
 	
 	EventHandler() = default;
@@ -84,12 +93,26 @@ public:
 		try{
 			int index = getIndex(eventName);
 			std::string  include = pyFileNames[index];
+#ifdef TIME_CHECK
+			auto beforeCall = std::chrono::system_clock::now();
+#endif
 			result = this->call(eventName, include, dataMap);
-
+#ifdef TIME_CHECK
+			auto afterCall = std::chrono::system_clock::now();
+#endif
 			if(result){
 				worker.sendToVest(eventName, *this);
 			}
+#ifdef TIME_CHECK
+			auto aftersend = std::chrono::system_clock::now();
+ 
+			std::chrono::duration<double> calltime = afterCall - beforeCall;
+			std::chrono::duration<double> sendtime = aftersend - afterCall;
+			TopLevelCallTimer.push_back(calltime.count());
+			TopLevelSendTimer.push_back(sendtime.count());
+#endif
 		}
+
 		catch(std::exception & e){
 			std::stringstream output{};
 			output << "ERROR: Failed to compile args cause: " << e.what();
@@ -167,6 +190,7 @@ public:
 private:
 	HapticInterface worker{};
 
+
 	bool call(std::string eventName, std::string fileName, std::unordered_map<std::string, double> const& dataMap) {
 	#ifdef DEBUG
 		{
@@ -188,8 +212,17 @@ private:
 			return false;
 		}
 
+#ifdef TIME_CHECK
+			auto beforeImport = std::chrono::system_clock::now();
+#endif
+		// importing py module and function 
 		CPyObject pModule = PyImport_Import(pName);
 		CPyObject pFunc = PyObject_GetAttrString(pModule, "main");
+#ifdef TIME_CHECK
+			auto afterImport = std::chrono::system_clock::now();
+			std::chrono::duration<double> importtime = afterImport - beforeImport;
+			PyImportTimes.push_back(importtime.count());
+#endif
 
 		if (pModule) {
 			if (size == 0) {
@@ -199,6 +232,9 @@ private:
 				}
 			}
 			else {
+#ifdef TIME_CHECK
+				auto beforePyCall = std::chrono::system_clock::now();
+#endif
 				CPyObject funcArgs = PyTuple_New(size);
 				int counter = 0;
 
@@ -221,11 +257,20 @@ private:
 					PyTuple_SetItem(funcArgs.getObject(), (Py_ssize_t)counter, elem->getObject());
 					counter++;
 				}
-
+#ifdef TIME_CHECK
+				auto afterArgParse = std::chrono::system_clock::now();
+#endif
 				if (pFunc && PyCallable_Check(pFunc)) {
 					CPyObject pRes = PyObject_CallObject(pFunc.getObject(), funcArgs);
 					result = PyLong_AsLong(pRes);
 				}
+#ifdef TIME_CHECK
+				auto afterPyCall = std::chrono::system_clock::now();
+				std::chrono::duration<double> argparseTime = afterArgParse - beforePyCall;
+				std::chrono::duration<double> pycallTime = afterPyCall - afterArgParse;
+				PyArgParseTimes.push_back(argparseTime.count());
+				PyCallTimes.push_back(pycallTime.count());
+#endif
 			}
 		}
 		else {
