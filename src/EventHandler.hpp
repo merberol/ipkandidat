@@ -279,12 +279,21 @@ private:
 			StreamLogger::log("EventHandler : call", "liuHapticLog.txt", output);
 			exit(1);
 		}
-
+#ifdef TIME_CHECK
+				auto beforeDel = std::chrono::system_clock::now();
+#endif
 		for (CPyObject* elem : pyObjects)
 		{
 			delete elem;
 		}
+#ifdef TIME_CHECK
+				auto afterDel = std::chrono::system_clock::now();
+				std::chrono::duration<double> DelTime = afterDel - beforeDel;
+				std::stringstream output{};
+				output << "call delete took: " << DelTime.count() << "seconds";
+				StreamLogger::log("EventHandler : call", "liuHapticLog.txt", output);
 
+#endif
 		return result;
 	}
 };
