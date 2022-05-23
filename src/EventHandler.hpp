@@ -1,3 +1,44 @@
+/**
+ * @file EventHandler.hpp
+ * @author Charlie Simonsson simonsson.charlie@gmail.com & Marcus Franzén
+ * @brief 
+ * @version 1
+ * @date 2022-05-23
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ * Authors: 
+ * Licence
+ * The MIT License (MIT)
+ *
+ * Copyright (c) <2022> <Charlie simonsson & Marcus Franzén>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE. 
+ * 
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
+ * ~~~~~~~~ Change LOG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
+ * ~~ Add and record of any changes and bug fixes to the system in this section
+ * ~~ of the file where those changes where made.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
+ * may 23 2022: Added Licence and change log : Charlie
+ * 
+ */
 #pragma once
 
 #include <windows.h>
@@ -17,14 +58,46 @@
 #include "XPLMDataAccess.h"
 
 
-
+/**
+ * @brief the Main interface coupling the X-Plane SDK ( see XplaveHapticInterface.cpp)
+ * and the bHaptics SDK ( see the Haptic interface class below ) into a central system that generates and 
+ * dispatches haptic activation to the vest.
+ * 
+ * -- External Dependensies
+ * 		the system needs to have the bHaptics player up and running before instansiating this class
+ * 		The best way to enshure this is by starting bHaptics Player before starting X-Plane
+ * 
+ */
 class EventHandler;
 
+/**
+ * @brief sends data to the bHaptics Player program
+ * 
+ * 		
+ * 
+ */
 class HapticInterface {
 	EventToFileVec eventFileVec{};
 public:
+	/**
+	 * @brief Construct a new Haptic Interface object 
+	 * 		contains debug code
+	 * 
+	 */
 	HapticInterface();
+
+	/**
+	 * @brief Destroy the Haptic Interface object
+	 * 		contains debug code
+	 * 
+	 */
 	~HapticInterface();
+
+	/**
+ 	* @brief Adds a event file map to the in
+ 	* 
+ 	* @param eventFileVec 
+ 	*/
 	void addFileVec(EventToFileVec & eventFileVec);
 	void sendToVest(std::string const& eventName, EventHandler const& eventHandler) const;
 };
@@ -48,9 +121,10 @@ public:
 	std::vector<double> PyCallTimes{};
 #endif
 	
-	
+	// cc 1 loc 1
 	EventHandler() = default;
 
+	// cc 2 loc 16
 	EventHandler(std::string id) 
 		:_id{ id }
 	{
@@ -75,11 +149,13 @@ public:
 		worker.addFileVec(tactFiles);
 	};
 
+	// cc 1 loc 3
 	~EventHandler() {
 		Destroy();
 		StreamLogger::log("EventHandler : Destructor", "liuHapticLog.txt", "############# Destroying EventHandler ##############");
 	}
 
+	// cc 3 loc 21
 	void runEvent(std::string eventName, std::unordered_map<std::string, double> const& dataMap) {
 		bool result{};
 #ifdef DEBUG
@@ -133,6 +209,7 @@ public:
 		}
 	}
 
+ 	// cc 1 loc 10
 	int getIndex(std::string const& eventName) const{
 		int index;
 #ifdef DEBUG
@@ -163,6 +240,7 @@ public:
 		return index;
 	}
 
+	// cc 2 loc 5
 	bool getIsUsed(std::string const& eventName) {
 #ifdef DEBUG
 		{
@@ -190,9 +268,9 @@ public:
 private:
 	HapticInterface worker{};
 
-
+	// cc 9 loc 39
 	bool call(std::string eventName, std::string fileName, std::unordered_map<std::string, double> const& dataMap) {
-	#ifdef DEBUG
+#ifdef DEBUG
 		{
 			std::stringstream output{};
 			output << "Calling Python logic for event: " << eventName;
@@ -326,19 +404,12 @@ HapticInterface::~HapticInterface() {
 #endif
 }
 
-/**
- * @brief Adds a event file map to the in
- * 
- * @param eventFileVec 
- */
 void HapticInterface::addFileVec(EventToFileVec & eventFileVec) {
 	if( this->eventFileVec.empty() ){
 		this->eventFileVec = std::move(eventFileVec);
 	}
 	else{
-		StreamLogger::log(" HapticInterface : addFileVec", "liuHapticLog.txt","ERROR: Trying to overwrite eventFileMap during run time");
-		exit(1);
-
+		StreamLogger::log(" HapticInterface : addFileVec", "liuHapticLog.txt","ERROR: Trying to overwrite eventFileMap during run time, action refused");
 	}
 }
 

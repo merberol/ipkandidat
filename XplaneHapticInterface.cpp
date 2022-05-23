@@ -1,5 +1,46 @@
 
-// cl /EHsc /std:c++17 /Fe:"C:\X-Plane 11\Resources\plugins\LiuHaptics\win.xpl" /I includes\Xplane\CHeaders\XPLM /I includes\Python39 /I includes\bHaptics /I src XplaneHapticInterface.cpp /LD /INCREMENTAL:NO /link /LIBPATH:"C:\XplHaptInterface\libs"
+/**
+ * @file XplaneHapticInterface.cpp
+ * @author Charlie Simonsson simonsson.charlie@gmail.com & Marcus Franzén
+ * @brief 
+ * Compile command: cl /EHsc /std:c++17 /Fe:"C:\X-Plane 11\Resources\plugins\LiuHaptics\win.xpl" /I includes\Xplane\CHeaders\XPLM /I includes\Python39 /I includes\bHaptics /I src XplaneHapticInterface.cpp /LD /INCREMENTAL:NO /link /LIBPATH:"C:\XplHaptInterface\libs"
+ * Use this command line comand with the x64 Tools Command Prompt for vs 2022 to compile the program. make shure the system has xplane installed at c: 
+ * 
+ * @version 1
+ * @date 2022-05-23
+ * 
+ * @copyright Copyright (c) 2022
+ * Licence
+ * The MIT License (MIT)
+ *
+ * Copyright (c) <2022> <Charlie simonsson & Marcus Franzén>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE. 
+ * 
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
+ * ~~~~~~~~ Change LOG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
+ * ~~ Add and record of any changes and bug fixes to the system in this section
+ * ~~ of the file where those changes where made.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
+ * may 23 2022: Added Licence and change log : Charlie
+ * 
+ */
 #pragma comment(lib,"python39_d.lib")
 #pragma comment(lib,"Xplane\\XPLM_64.lib")
 #pragma comment(lib,"bHapticSDK\\bin\\win64\\haptic_library.lib")
@@ -62,6 +103,7 @@ static float	HapticFlightLoopCallback(
                                    void *               inRefcon);    
 
 
+// cc 2 loc 14
 PLUGIN_API int XPluginStart(
 						char *		outName,
 						char *		outSig,
@@ -122,7 +164,9 @@ PLUGIN_API int XPluginStart(
  * 
  * @param eventName 
  * @return std::unordered_map<std::string, double> 
+ * 
  */
+ // cc 4 loc 26
 std::unordered_map<std::string, double> getData(std::string eventName) {
 	std::vector<RefTypePair> dataRefStrings = eventHandler->eventTypeRefs[eventHandler->getIndex(eventName)];
 	std::unordered_map<std::string, double> data{};
@@ -174,6 +218,8 @@ std::unordered_map<std::string, double> getData(std::string eventName) {
 	return data;
 }
 
+
+// cc 3 loc 15
 float	HapticFlightLoopCallback(
                                    float                inElapsedSinceLastCall,
                                    float                inElapsedTimeSinceLastFlightLoop,
@@ -255,6 +301,9 @@ float	HapticFlightLoopCallback(
 	return 1.0;
 }
 
+#ifdef TIME_CHECK
+///////////////// not strictly a part of the system unless you count debug and data collection
+// cc 2 loc 5
 void saveData(std::string fileName, std::vector<double> const& data, std::string columnName){
 	std::stringstream output{columnName +";\n"};
 	for(double time: data){
@@ -262,11 +311,12 @@ void saveData(std::string fileName, std::vector<double> const& data, std::string
 	}
 	StreamLogger::lograw(fileName, output.str());
 }
-
+// cc1 loc 2
 void buildFlightLoopFile(){
 	saveData("flightloopdata.csv", HI::flightLoopData, "loopTimes");
 }
 
+// cc 2 loc 3
 void buildEventTimesFile(){
 	
 	for( auto eventPair : HI::eventTimeData) {
@@ -274,7 +324,7 @@ void buildEventTimesFile(){
 	}
 }
 
-
+// cc 1 loc 8
 void saveData()
 {
 	buildFlightLoopFile();
@@ -286,8 +336,10 @@ void saveData()
 	saveData("PyCallTimes.csv", eventHandler->PyCallTimes, "pycallTimes");
 }
 
-PLUGIN_API void	XPluginStop(void)
-{
+/////////////////////////////////////////////////////////////////
+#endif
+// cc 1 loc 4
+PLUGIN_API void	XPluginStop(void){
 #ifdef DEBUG
 	StreamLogger::log("XplaneHapticInterface : XPluginStop", "liuHapticLog.txt", "shutting down plugin");
 #endif
@@ -299,18 +351,17 @@ PLUGIN_API void	XPluginStop(void)
 	delete eventHandler;
 	eventHandler = nullptr;
 
-
-
 	XPLMUnregisterFlightLoopCallback(HapticFlightLoopCallback, NULL);
 #ifdef DEBUG
 	StreamLogger::log("XplaneHapticInterface : XPluginStop", "liuHapticLog.txt", "exiting scope");
 #endif
 }
 
+// cc 1 loc 1
 PLUGIN_API void XPluginDisable(void) {}
-
+// cc 1 loc 1
 PLUGIN_API int XPluginEnable(void) { return 1; }
-
+// cc 1 loc 1
 PLUGIN_API void XPluginReceiveMessage(
 	XPLMPluginID	inFromWho,
 	int				inMessage,

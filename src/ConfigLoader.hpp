@@ -1,4 +1,44 @@
-#pragma once 
+/**
+ * @file ConfigLoader.hpp
+ * @author Charlie Simonsson simonsson.charlie@gmail.com & Marcus Franzén
+ * @brief 
+ * @version 1
+ * @date 2022-05-23
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ * Authors: 
+ * Licence
+ * The MIT License (MIT)
+ *
+ * Copyright (c) <2022> <Charlie simonsson & Marcus Franzén>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE. 
+ * 
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
+ * ~~~~~~~~ Change LOG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
+ * ~~ Add and record of any changes and bug fixes to the system in this section
+ * ~~ of the file where those changes where made.
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
+ * may 23 2022: Added Licence and change log : Charlie
+ * 
+ */
 
 #include <iostream>
 #include <fstream>
@@ -13,13 +53,14 @@
 
 
 struct ConfigLoader {
-
+	// cc 1 loc 1
 	ConfigLoader() {
 #ifdef DEBUG
 		StreamLogger::log("ConfigLoader : Constructor", "liuHapticLog.txt",  "### Creating ConfigLoader ###" );
 #endif
 	}
 
+	// cc 3 loc 10
 	void run(EventNameMap & eventNameMap, EventUsedVec & eventUsed,  TactFileVec & tactFiles, RefPathVector & refPathVec,
 			std::vector<std::vector<RefTypePair>> & eventTypeRefs,  PyFileNameVec & pyFileNames ) {
 
@@ -48,7 +89,8 @@ struct ConfigLoader {
 		return;
 	}
 	
-	std::string loadTactFile(std::string fileName = "test.tact") {
+	//cc 4 loc 16
+	std::string loadTactFile(std::string fileName = "test.tact") { 
 #ifdef DEBUG
 		{
 			std::stringstream output{};
@@ -82,6 +124,7 @@ struct ConfigLoader {
 		}
 	}
 
+	// cc 4 loc 30
 	void processConfig(
 		std::unordered_map<std::string, int> &eventNameMap,
 		std::vector<bool> &eventUsed,
@@ -131,6 +174,7 @@ struct ConfigLoader {
 		removeDuplicateRefs(refVec);
 	}
 
+	// cc 3 loc 12
 	void fillRowWithConfigElements(std::vector<std::string> & row, bool & first, std::fstream & fileIn) {
 		std::string line{};
 		std::string word{};
@@ -149,6 +193,7 @@ struct ConfigLoader {
 		}
 	}
 
+	// cc 3 loc 7
 	void fillDataRefVectors(int const& numDataPoints, std::vector<std::string> const& row, std::vector<std::string> & refVec, std::vector<RefTypePair> & eventRefs) {
 		if (numDataPoints > 0) {
 			for ( int i = 0; i < numDataPoints * 2; i+=2){
@@ -160,6 +205,7 @@ struct ConfigLoader {
 		}
 	}
 
+	// cc 1 loc 4
 	void removeDuplicateRefs(std::vector<std::string> & refVec) {
 		std::sort(begin(refVec), end(refVec));
 		auto c_itr = std::unique(begin(refVec), end(refVec));
