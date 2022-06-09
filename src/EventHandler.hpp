@@ -381,9 +381,16 @@ private:
  / ------------------------------------------------ Haptic Interface Implementation ------------------------------------------------------------
  / ---------------------------------------------------------------------------------------------------------------------------------------------
 */
-
+// #define PRESENTATION
 HapticInterface::HapticInterface()
 {
+#ifdef PRESENTATION
+	AllocConsole();
+	auto out = freopen("CONOUT$", "w", stdout);
+	auto err = freopen("CONOUT$", "w", stderr);
+	std::cout << "DEBUG: Active" << std::endl;
+#endif
+
 #ifdef DEBUG
 	{
 		std::stringstream output{};
@@ -414,6 +421,10 @@ void HapticInterface::addFileVec(EventToFileVec & eventFileVec) {
 }
 
 void HapticInterface::sendToVest(std::string const& eventName, EventHandler const& eventHandler) const {
+#ifdef PRESENTATION
+	std::cout << "Sending " << eventName << std::endl;
+#endif
+
 #ifdef DEBUG
 	{
 		std::stringstream output{};
