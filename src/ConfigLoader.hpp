@@ -52,6 +52,10 @@
 
 
 
+/**
+ * @brief the config loader reads from the assigned config file and builds the nessesary data types.
+ * 
+ */
 struct ConfigLoader {
 	// cc 1 loc 1
 	ConfigLoader() {
@@ -61,6 +65,16 @@ struct ConfigLoader {
 	}
 
 	// cc 3 loc 10
+	/**
+	 * @brief main function of the Configloader this function exists so that instansiating the configloader and running it can be seperated in time to where it is most oportune.
+	 * 
+	 * @param eventNameMap 
+	 * @param eventUsed 
+	 * @param tactFiles 
+	 * @param refPathVec 
+	 * @param eventTypeRefs 
+	 * @param pyFileNames 
+	 */
 	void run(EventNameMap & eventNameMap, EventUsedVec & eventUsed,  TactFileVec & tactFiles, RefPathVector & refPathVec,
 			std::vector<std::vector<RefTypePair>> & eventTypeRefs,  PyFileNameVec & pyFileNames ) {
 
