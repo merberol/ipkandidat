@@ -36,7 +36,12 @@
  * ~~ Add and record of any changes and bug fixes to the system in this section
  * ~~ of the file where those changes where made.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
- * may 23 2022: Added Licence and change log : Charlie
+ * may 23 2022: Added Licence and change log                                    : Charlie
+ * aug 29 2022: renamed include to py_include for better clarity                : Charlie
+ *            : renamed the getIsUsed method to isUsed                          :
+ *            : renamed the fileName parameter in call to py_import for clarity :
+ * 			  : renamed counter to position in the call method for clarity  	:
+ * 			  : added docstrings the clarifying comments						:
  * 
  */
 #pragma once
@@ -156,6 +161,12 @@ public:
 	}
 
 	// cc 3 loc 21
+	/**
+	 * @brief If a given event is used this method handles event propagation to the vest.
+	 * 
+	 * @param eventName 
+	 * @param dataMap 
+	 */
 	void runEvent(std::string eventName, std::unordered_map<std::string, double> const& dataMap) {
 		bool result{};
 #ifdef DEBUG
@@ -168,11 +179,12 @@ public:
 #endif
 		try{
 			int index = getIndex(eventName);
-			std::string  include = pyFileNames[index];
+			std::string  py_include = pyFileNames[index];
 #ifdef TIME_CHECK
 			auto beforeCall = std::chrono::system_clock::now();
 #endif
-			result = this->call(eventName, include, dataMap);
+			// check to see if the event shuld propagate
+			result = this->call(eventName, py_include, dataMap);
 #ifdef TIME_CHECK
 			auto afterCall = std::chrono::system_clock::now();
 #endif
@@ -210,6 +222,12 @@ public:
 	}
 
  	// cc 1 loc 10
+	/**
+	 * @brief Get the index associated with the given eventName from the eventNameMap
+	 * 
+	 * @param eventName 
+	 * @return int 
+	 */
 	int getIndex(std::string const& eventName) const{
 		int index;
 #ifdef DEBUG
@@ -241,13 +259,20 @@ public:
 	}
 
 	// cc 2 loc 5
-	bool getIsUsed(std::string const& eventName) {
+	/**
+	 * @brief checks if a given event is used
+	 * 
+	 * @param eventName 
+	 * @return boolean
+	 * 
+	 */
+	bool isUsed(std::string const& eventName) {
 #ifdef DEBUG
 		{
 			std::stringstream output{};
 			output << "Getting if event " << eventName << "is used";
 
-			StreamLogger::log("EventHandler : getIsUsed", "liuHapticLog.txt", output);
+			StreamLogger::log("EventHandler : isUsed", "liuHapticLog.txt", output);
 		}
 #endif
 		bool result = eventUsed[getIndex(eventName)];
@@ -259,7 +284,7 @@ public:
 		{
 			std::stringstream output{};
 			output << "returning result " << result;
-			StreamLogger::log("EventHandler : getIsUsed", "liuHapticLog.txt", output);
+			StreamLogger::log("EventHandler : isUsed", "liuHapticLog.txt", output);
 		}
 #endif
 		return result;
@@ -269,7 +294,15 @@ private:
 	HapticInterface worker{};
 
 	// cc 9 loc 39
-	bool call(std::string eventName, std::string fileName, std::unordered_map<std::string, double> const& dataMap) {
+	/**
+	 * @brief This method is responsible for importing and running python functions 
+	 * 
+	 * @param eventName 
+	 * @param py_import 
+	 * @param dataMap 
+	 * @return boolean
+	 */
+	bool call(std::string eventName, std::string py_import, std::unordered_map<std::string, double> const& dataMap) {
 #ifdef DEBUG
 		{
 			std::stringstream output{};
@@ -278,12 +311,19 @@ private:
 			StreamLogger::log("EventHandler : call", "liuHapticLog.txt", output);
 		}
 #endif
+		// if possible this shuld be moved to its own class that handles the pyInstance and associated functions but our initial attempt at this failed.
 		CPyInstance pyInstance;
 		std::vector<CPyObject *> pyObjects;
+		// getting the asociated datarefsStrings
 		int index = EventHandler::getIndex(eventName);
 		std::vector<RefTypePair> dataRefStrings = eventTypeRefs[index];
+
+		// do we have arguments to pass to the function ?
 		int size = dataRefStrings.size();
-		CPyObject pName = PyUnicode_FromString(fileName.c_str());
+
+		// we need to convert the importstring to a CPyObject
+		CPyObject pName = PyUnicode_FromString(py_import.c_str());
+
 		bool result{};
 		
 		if (!pName) {
@@ -301,8 +341,9 @@ private:
 			std::chrono::duration<double> importtime = afterImport - beforeImport;
 			PyImportTimes.push_back(importtime.count());
 #endif
-
+		// nessesary sanity check to se that the module was correctly imported
 		if (pModule) {
+			// if we dont need to pass any arguments to the function we simply run it.
 			if (size == 0) {
 				if (pFunc && PyCallable_Check(pFunc)) {
 					CPyObject pRes = PyObject_CallObject(pFunc.getObject(), NULL);
@@ -313,15 +354,19 @@ private:
 #ifdef TIME_CHECK
 				auto beforePyCall = std::chrono::system_clock::now();
 #endif
+				// we have arguments and needs to pass them to the function first we create a tuple to hold the values
 				CPyObject funcArgs = PyTuple_New(size);
-				int counter = 0;
+				int position = 0;
 
+				// we iterate over the ref-type pairs treating them all as doubles.
 				for (RefTypePair x : dataRefStrings) {
 					pyObjects.push_back(new CPyObject{PyFloat_FromDouble(dataMap.at(x.second))});
 				}
 				
+				// then we iterate over the pyobjects we just created to put them into their associated position in the parameter tuple
 				for (CPyObject* elem : pyObjects)
 				{
+					// sanity check to make shure the funcArgs object exists.
 					if(funcArgs.getObject() == nullptr)
 					{
 						{
@@ -332,8 +377,10 @@ private:
 						exit(1);
 					}
 
-					PyTuple_SetItem(funcArgs.getObject(), (Py_ssize_t)counter, elem->getObject());
-					counter++;
+					// here goes the magic of adding the arguments to the parameter tuple 
+					PyTuple_SetItem(funcArgs.getObject(), (Py_ssize_t)position, elem->getObject());
+					//increment position
+					position++;
 				}
 #ifdef TIME_CHECK
 				auto afterArgParse = std::chrono::system_clock::now();

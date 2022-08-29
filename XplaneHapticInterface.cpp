@@ -249,7 +249,7 @@ float	HapticFlightLoopCallback(
 				<< "Event Loop Start\n";
 			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 #endif
-			if (eventHandler->getIsUsed(p.first)) {
+			if (eventHandler->isUsed(p.first)) {
 				dataMap = getData(p.first);
 				eventHandler->runEvent(p.first, dataMap);
 			}
