@@ -385,6 +385,7 @@ private:
 #ifdef TIME_CHECK
 				auto afterArgParse = std::chrono::system_clock::now();
 #endif
+				// once the arguments are setup we call the python function
 				if (pFunc && PyCallable_Check(pFunc)) {
 					CPyObject pRes = PyObject_CallObject(pFunc.getObject(), funcArgs);
 					result = PyLong_AsLong(pRes);
@@ -407,6 +408,7 @@ private:
 #ifdef TIME_CHECK
 				auto beforeDel = std::chrono::system_clock::now();
 #endif
+		// clean up memory 
 		for (CPyObject* elem : pyObjects)
 		{
 			delete elem;
@@ -419,6 +421,7 @@ private:
 				StreamLogger::log("EventHandler : call", "liuHapticLog.txt", output);
 
 #endif
+		// and return the result
 		return result;
 	}
 };

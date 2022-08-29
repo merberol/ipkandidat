@@ -37,6 +37,7 @@
  * ~~ of the file where those changes where made.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
  * may 23 2022: Added Licence and change log : Charlie
+ * aug 29 2022: added code to dynamically allokate the file buffer size by reading file size : Charlie
  * 
  */
 
@@ -118,15 +119,20 @@ struct ConfigLoader {
 			StreamLogger::log("ConfigLoader : loadTactFile", "liuHapticLog.txt", fileName + " failed to open");
 			exit(1);	
 		}
+		
 
 #ifdef DEBUG
 		StreamLogger::log("EventHandler : runEvent", "liuHapticLog.txt", fileName + " is open");
 #endif
-	
-		char* inputString = new char[100000];
+		// get the file size
+		fileIn.seekg(0, fileIn.end);
+		int fileSize = fileIn.tellg();
+		fileIn.seekg(0, fileIn.beg);
+
+		char* inputString = new char[fileSize];
 		if (fileIn.good()) {
 			while(!fileIn.eof()){
-				fileIn.getline(inputString, 100000);
+				fileIn.getline(inputString, fileSize);
 			}
 			fileIn.close();
 			return inputString;
