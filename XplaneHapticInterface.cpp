@@ -157,6 +157,7 @@ PLUGIN_API int XPluginStart(
 	return 1;
 }
 
+ // cc 4 loc 26
 /**
  * @brief Retrives the data map for the current event.
  * 
@@ -166,8 +167,8 @@ PLUGIN_API int XPluginStart(
  * @return std::unordered_map<std::string, double> 
  * 
  */
- // cc 4 loc 26
 std::unordered_map<std::string, double> getData(std::string eventName) {
+	// TODO: move this to types or EventHandler and add datarefmap and eventhadler references to parameter list to avoid assuming globals
 	std::vector<RefTypePair> dataRefStrings = eventHandler->eventTypeRefs[eventHandler->getIndex(eventName)];
 	std::unordered_map<std::string, double> data{};
 	int counter = 0;
@@ -250,6 +251,7 @@ float	HapticFlightLoopCallback(
 			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
 #endif
 			if (eventHandler->isUsed(p.first)) {
+				// TODO: Konsider removing this from global scope and instead instansiate here where it is needed and pass as reference to getData..
 				dataMap = getData(p.first);
 				eventHandler->runEvent(p.first, dataMap);
 			}

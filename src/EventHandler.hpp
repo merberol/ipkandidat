@@ -303,6 +303,8 @@ private:
 	 * @return boolean
 	 */
 	bool call(std::string eventName, std::string py_import, std::unordered_map<std::string, double> const& dataMap) {
+		// TODO: create a handler to deal with pyinstance and memory issues. this method is currently the biggest performance bottle neck 
+		
 #ifdef DEBUG
 		{
 			std::stringstream output{};
