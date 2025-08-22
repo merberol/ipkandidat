@@ -1,0 +1,10 @@
+**/*.vcxproj
+**/**.db
+**/**.suo
+**/debug
+**/**.obj
+**/*.vs
+**/.vscode
+
+
+
