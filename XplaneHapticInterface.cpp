@@ -209,7 +209,8 @@ std::unordered_map<std::string, double> getData(std::string eventName) {
 			output << "Unusable value type in config: " << valType << "\n";
 			output << "Use only int, float or double.";
 			StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
-			exit(1);
+			// exit(1);
+			throw std::runtime_error("Unusable value type in config: " + valType + "\nUse only int, float or double.");
 		}
 		counter++;
 	}
@@ -282,7 +283,18 @@ float	HapticFlightLoopCallback(
 			<< e.what()
 			<< "\nin Flightloop.";
 		StreamLogger::log("XplaneHapticInterface", "liuHapticLog.txt", output);
+#ifdef DEBUG
+		// if we are in debug mode we want to log the error and crash X-plane
+		// to make shure the plugin is not running in a bad state, while developing or 
+		// testing the plugin. 
 		exit(1);
+#else
+		
+		// Returning 0.0f from the flight loop callback unregisters it
+		// and prevents it from being called again. This is a graceful
+		// way to disable the plugin on a critical error instead of crashing X-Plane.
+		return 0.0f;
+#endif
 	}
 #ifdef TIME_CHECK
 	auto flEnd = std::chrono::system_clock::now();

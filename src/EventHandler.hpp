@@ -143,7 +143,8 @@ public:
 			std::stringstream output{};
 			output << "Cannot find exe path for Bhaptics Player.";
 			StreamLogger::log("EventHandler : Constructor", "liuHapticLog.txt", output);
-			exit(1);
+			// exit(1);
+			throw std::runtime_error("Cannot find exe path for Bhaptics Player.");
 		}
 		// initialising bHapticPlayer link
 		Initialise(id.c_str(), "LiuXPlaneHapticPlugin");
@@ -205,7 +206,8 @@ public:
 			std::stringstream output{};
 			output << "ERROR: Failed to compile args cause: " << e.what();
 			StreamLogger::log("EventHandler : runEvent", "liuHapticLog.txt", output);
-			exit(1);
+			// exit(1);
+			throw std::runtime_error("Error in runEvent: " + std::string(e.what()));
 		}
 
 		try{
@@ -217,7 +219,8 @@ public:
 			std::stringstream output{};
 			output << "Error: " << e.what();
 			StreamLogger::log("EventHandler : runEvent", "liuHapticLog.txt", output);
-			exit(1);
+			// exit(1);
+			throw std::runtime_error("Error disabling the ReadyEvent: " + std::string(e.what()));
 		}
 	}
 
@@ -245,7 +248,8 @@ public:
 			std::stringstream output{};
 			output << "EventName not found in eventNameMap\nError: " << e.what();
 			StreamLogger::log("EventHandler :getIndex", "liuHapticLog.txt", output);
-			exit(1);
+			//exit(1);
+			throw std::runtime_error("EventName not found in eventNameMap\nError: " + std::string(e.what()));
 		}
 #ifdef DEBUG
 		{
@@ -276,10 +280,11 @@ public:
 		}
 #endif
 		bool result = eventUsed[getIndex(eventName)];
-
+		/* this shuld not be needed as the runEvent allready disables this event
 		if (result && eventName == "ReadyEvent") {
 			eventUsed[getIndex(eventName)] = false;
 		}
+		*/
 #ifdef DEBUG
 		{
 			std::stringstream output{};
@@ -314,7 +319,7 @@ private:
 		}
 #endif
 		// if possible this shuld be moved to its own class that handles the pyInstance and associated functions but our initial attempt at this failed.
-		CPyInstance pyInstance;
+		CPyInstance pyInstance; // <-- a later build shuld try moving this to Eventhandlers private members 
 		std::vector<CPyObject *> pyObjects;
 		// getting the asociated datarefsStrings
 		int index = EventHandler::getIndex(eventName);
@@ -376,7 +381,8 @@ private:
 							output << "FuncArgs contains nothing.";
 							StreamLogger::log("EventHandler : call", "liuHapticLog.txt", output);
 						}
-						exit(1);
+						// exit(1);
+						throw std::runtime_error("FuncArgs contains nothing.");
 					}
 
 					// here goes the magic of adding the arguments to the parameter tuple 
@@ -405,7 +411,8 @@ private:
 			std::stringstream output{};
 			output << " Error when loading file: ";
 			StreamLogger::log("EventHandler : call", "liuHapticLog.txt", output);
-			exit(1);
+			//exit(1);
+			throw std::runtime_error("Error when loading file: " + py_import);
 		}
 #ifdef TIME_CHECK
 				auto beforeDel = std::chrono::system_clock::now();

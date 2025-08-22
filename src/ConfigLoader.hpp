@@ -38,7 +38,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *~
  * may 23 2022: Added Licence and change log : Charlie
  * aug 29 2022: added code to dynamically allokate the file buffer size by reading file size : Charlie
- * 
+ * aug 22 2025: changede instances of exit(1) to instead throw an error to be catched in the flight loop 
  */
 
 #include <iostream>
@@ -93,7 +93,7 @@ struct ConfigLoader {
 		if ( eventUsed.size() != tactFileNames.size() || tactFileNames.size() != pyFileNames.size() || pyFileNames.size() != eventTypeRefs.size() )
 		{
 			StreamLogger::log("ConfigLoader : run", "liuHapticLog.txt", "Vector sizes don't match!");
-			exit(1);
+			throw std::runtime_error("Vector sizes don't match!");
 		}
 
 		for (std::string fileName : tactFileNames) {
@@ -117,7 +117,7 @@ struct ConfigLoader {
 		std::ifstream fileIn("Resources\\plugins\\LiuHaptics\\tactFiles\\" + fileName);
 		if (!fileIn.is_open()) {
 			StreamLogger::log("ConfigLoader : loadTactFile", "liuHapticLog.txt", fileName + " failed to open");
-			exit(1);	
+			throw std::runtime_error("Failed to open tact file: " + fileName);
 		}
 		
 
@@ -157,7 +157,7 @@ struct ConfigLoader {
 		fileIn.open("Resources\\plugins\\LiuHaptics\\ConfigCSV.csv", std::fstream::in);
 		if (!fileIn.is_open()) {
 			StreamLogger::log("ConfigLoader : processConfig", "liuHapticLog.txt", "Failed to open ConfigCSV.csv.");
-			exit(1);
+			throw std::runtime_error("Failed to open ConfigCSV.csv.");
 		}
 
 		std::vector<std::string> row{};
